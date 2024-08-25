@@ -1,8 +1,14 @@
 import React, { Fragment, useState } from "react";
+import ChildComponent from "./ChildComponent";
 
 const MyComponent = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [jobList, setJobList] = useState([
+    { id: "1", title: "Doctor", salary: "300" },
+    { id: "2", title: "Doctor", salary: "300" },
+    { id: "3", title: "Doctor", salary: "300" },
+  ]);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -21,6 +27,7 @@ const MyComponent = () => {
         <br />
         <input type="button" value="Submit" onClick={(event) => handleClick(event)} />
       </form>
+      <ChildComponent firstName={firstName} lastName={lastName} jobList={jobList}/>
     </Fragment>
   );
 };
