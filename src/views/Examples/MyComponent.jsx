@@ -1,66 +1,20 @@
 import React, { Fragment, useState } from "react";
-import JobComponent from "./JobComponent";
 import AddComponent from "./AddComponent";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import UserComponent from "./UserComponent";
+import { toast } from "react-toastify";
 
 const MyComponent = () => {
-  const [name, setName] = useState("");
-  const [jobList, setJobList] = useState([]);
-  const [contentEdit, setContentEdit] = useState({});
-  const isEmptyObj = Object.keys(contentEdit).length === 0;
+  const [userList, setUserList] = useState([]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!name) {
-      toast.error("Please enter name");
-      return;
-    }
-    setJobList([...jobList, { id: ++jobList.length, title: name }]);
-    setName("");
-    toast.success("Successfully to add");
-  };
-
-  const handleEdit = (item) => {
-    if (!isEmptyObj && contentEdit.id === item.id) {
-      let jobListClone = jobList;
-      const idx = jobList.findIndex((job) => job.id === item.id);
-      jobListClone[idx].title = item.title;
-      setContentEdit(jobListClone);
-    } else {
-      setContentEdit(item);
-    }
-  };
-
-  const handleDelete = (id) => {
-    setJobList(jobList.filter((job) => job.id !== id));
-    setContentEdit({});
+  const handleSubmit = (userInfo) => {
+    setUserList([...userList, userInfo]);
+    toast.success("Successfully added user");
   };
 
   return (
     <Fragment>
-      <AddComponent name={name} setName={setName} handleSubmit={handleSubmit} />
-      <JobComponent
-        name={name}
-        jobList={jobList}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-        contentEdit={contentEdit}
-        setContentEdit={setContentEdit}
-        isEmptyObj={isEmptyObj}
-      />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <AddComponent handleSubmit={handleSubmit} />
+      <UserComponent userList={userList} setUserList={setUserList} />
     </Fragment>
   );
 };
