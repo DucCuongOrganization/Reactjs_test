@@ -16,14 +16,14 @@ const UserComponent = (props) => {
       return user;
     });
     setUserList(updatedUserList);
-    setEditUser({})
-    toast.success("Update todo succeed!");
+    setEditUser({});
+    toast.success("Update user successfully!");
   };
 
   const handleDelete = (item) => {
     const updatedUserList = userList.filter((user) => user.id !== item.id);
     setUserList(updatedUserList);
-    toast.success("Delele succeed!");
+    toast.success("Delele user successfully!");
   };
 
   const handleEditUser = (e, type) => {
@@ -34,37 +34,43 @@ const UserComponent = (props) => {
 
   return (
     <>
-      <div>
+      <div className="show_content">
         <div>
           <button onClick={() => setShow(!show)}>
             {show ? "Hide" : "Show"}
           </button>
         </div>
         {show &&
-          userList.map((item) => (
-            <div key={item.id} className="show_item">
+          userList.map((item, index) => (
+            <div key={`${item.id} - ${index}`} className="show_item">
               {!isEmptyObj && item.id === editUser.id ? (
                 <>
-                  <input
-                    value={editUser.name}
-                    onChange={(e) => handleEditUser(e, "name")}
-                  />
-                  <input
-                    value={editUser.salary}
-                    onChange={(e) => handleEditUser(e, "salary")}
-                  />
-                  <button onClick={() => handleSave(item)}>Save</button>
+                  <div>
+                    <input
+                      value={editUser.name}
+                      onChange={(e) => handleEditUser(e, "name")}
+                    />
+                    <input
+                      value={editUser.salary}
+                      onChange={(e) => handleEditUser(e, "salary")}
+                    />
+                  </div>
+                  <div>
+                    <button onClick={() => handleSave(item)}>Save</button>
+                    <button onClick={() => handleDelete(item)}>Delete</button>
+                  </div>
                 </>
               ) : (
                 <>
                   <span>
-                    {item.name} - {item.salary}$
+                    {index + 1}. {item.name} - {item.salary}$
                   </span>
-                  <button onClick={() => setEditUser(item)}>Edit</button>
+                  <div>
+                    <button onClick={() => setEditUser(item)}>Edit</button>
+                    <button onClick={() => handleDelete(item)}>Delete</button>
+                  </div>
                 </>
               )}
-
-              <button onClick={() => handleDelete(item)}>Delete</button>
             </div>
           ))}
       </div>

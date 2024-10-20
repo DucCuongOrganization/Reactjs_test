@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 const AddComponent = (props) => {
   const { handleSubmit } = props;
   const [name, setName] = useState("");
-  const [salary, setSalary] = useState(0);
+  const [salary, setSalary] = useState();
 
   const onSubmit = () => {
     if (!name || !salary) {
-      toast.error("Please enter a name and a salary");
+      toast.error("Please enter name and salary");
       return;
     }
     const userInfo = {

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import AddComponent from "./AddComponent";
 import UserComponent from "./UserComponent";
 import { toast } from "react-toastify";
@@ -12,10 +12,10 @@ const MyComponent = () => {
   };
 
   return (
-    <Fragment>
+    <div style={{ paddingTop: "20px" }}>
       <AddComponent handleSubmit={handleSubmit} />
       <UserComponent userList={userList} setUserList={setUserList} />
-    </Fragment>
+    </div>
   );
 };
 
