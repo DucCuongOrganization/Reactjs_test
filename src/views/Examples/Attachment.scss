@@ -1,0 +1,385 @@
+/* =============================================================================
+   File Upload & Preview Styles for FormPopup
+   ============================================================================= */
+
+/* File Field Container */
+.form-field-file {
+  position: relative;
+  width: 100%;
+}
+
+.form-field--file {
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.form-field--file:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.form-field--file:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-field--file.form-field--error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.form-field--file.form-field--error:hover {
+  border-color: #dc2626;
+  background-color: #fee2e2;
+}
+
+/* File Upload Hint */
+.form-field-file__hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* File Preview Container */
+.file-preview-container {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 2px; /* Để tránh bị cắt shadow */
+}
+
+/* Custom scrollbar cho file preview container */
+.file-preview-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-preview-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.file-preview-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.file-preview-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* File Preview Block */
+.file-preview-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.file-preview-block:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Remove Button */
+.file-preview-block__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  z-index: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-preview-block__remove:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.file-preview-block__remove:active {
+  transform: scale(0.95);
+}
+
+/* Content Container */
+.file-preview-block__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0; /* Để text có thể truncate */
+}
+
+/* Image Preview */
+.file-preview-block__image {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+/* File Icon */
+.file-preview-block__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* File Info */
+.file-preview-block__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-preview-block__name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.4;
+  /* Text truncation */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-preview-block__size {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Empty State */
+.file-preview-container:empty::after {
+  content: "";
+  display: none;
+}
+
+/* Drag and Drop States */
+.form-field--file[data-drag-over="true"] {
+  border-color: #3b82f6;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Loading State */
+.file-preview-block--loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.file-preview-block--loading .file-preview-block__icon,
+.file-preview-block--loading .file-preview-block__image {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-preview-block--loading .file-preview-block__icon::after,
+.file-preview-block--loading .file-preview-block__image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Multiple Files Layout - Grid for better space usage */
+@media (min-width: 640px) {
+  .file-preview-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* Show 2 columns for smaller files */
+  .file-preview-container.file-preview-container--compact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .file-preview-block {
+    padding: 10px;
+  }
+
+  .file-preview-block__content {
+    gap: 10px;
+  }
+
+  .file-preview-block__image,
+  .file-preview-block__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .file-preview-block__icon {
+    font-size: 20px;
+  }
+
+  .file-preview-block__name {
+    font-size: 13px;
+  }
+
+  .file-preview-block__size {
+    font-size: 11px;
+  }
+
+  .file-preview-block__remove {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
+
+/* Animation for new files */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.file-preview-block {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Focus styles for accessibility */
+.file-preview-block__remove:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Error state for file preview */
+.file-preview-block--error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.file-preview-block--error .file-preview-block__name {
+  color: #dc2626;
+}
+
+/* Success state for uploaded files */
+.file-preview-block--success {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.file-preview-block--success .file-preview-block__remove {
+  background: #10b981;
+}
+
+.file-preview-block--success .file-preview-block__remove:hover {
+  background: #059669;
+}
+
+/* File type specific styling */
+.file-preview-block[data-file-type="image"] .file-preview-block__icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.file-preview-block[data-file-type="pdf"] .file-preview-block__icon {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.file-preview-block[data-file-type="document"] .file-preview-block__icon {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.file-preview-block[data-file-type="text"] .file-preview-block__icon {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+/* Drag and drop overlay (optional enhancement) */
+.form-field-file__drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(59, 130, 246, 0.1);
+  border: 2px dashed #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.form-field-file__drop-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}

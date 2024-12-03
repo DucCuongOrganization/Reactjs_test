@@ -1,12 +1,13 @@
-import "./App.scss";
-import { ToastContainer } from "react-toastify";
-import Nav from "./Nav/Nav";
-import Home from "./Examples/Home";
-import RandomUser from "../components/RandomUser/RandomUser";
 import { Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import RandomUser from "../components/RandomUser/RandomUser";
+import "./App.scss";
+import Home from "./Examples/Home";
 import JobComponent from "./Examples/JobComponent";
-import ListUsers from "./Users/ListUsers";
+import ModelForm from "./Examples/ModelForm";
+import Nav from "./Nav/Nav";
 import DetailUser from "./Users/DetailUser";
+import ListUsers from "./Users/ListUsers";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/random" component={RandomUser} />
           <Route path="/users" component={ListUsers} exact />
           <Route path="/users/:id" component={DetailUser} />
+          <Route path="/model" component={ModelForm} />
         </Switch>
       </header>
       <ToastContainer

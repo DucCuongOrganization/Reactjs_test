@@ -19,6 +19,9 @@ const Nav = () => {
         <NavLink to="/users" activeClassName="active">
           User
         </NavLink>
+        <NavLink to="/model" activeClassName="active">
+          Model
+        </NavLink>
       </div>
     </div>
   );
