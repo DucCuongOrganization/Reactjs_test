@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import FormPopup, { FieldConfig } from "./FormPopup";
+import FormPopup, { FieldConfig } from "../../common/FormPopup/FormPopup";
+import {
+  validateEndDate,
+  validateMaxLength,
+  validateURL,
+} from "../../../utils/common.function";
 
 const ModelForm: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -7,34 +12,6 @@ const ModelForm: React.FC = () => {
   const [currentData, setCurrentData] = useState<Record<string, any>>({});
 
   // Simplified validation functions that return boolean
-  const validateURL = (url: string): boolean => {
-    if (!url) return true; // Optional field
-    const urlPattern =
-      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-    return urlPattern.test(url);
-  };
-
-  const validateEndDate = (
-    endDate: string,
-    formData?: Record<string, any>
-  ): boolean => {
-    if (!endDate) return true; // Optional field
-
-    const startDate = formData?.startDate;
-    if (!startDate) return true;
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    return end > start;
-  };
-
-  const validateMaxLength =
-    (maxLength: number) =>
-    (value: string): boolean => {
-      if (!value) return true;
-      return value.length <= maxLength;
-    };
 
   // Field configurations
   const modelFields: FieldConfig[] = [
@@ -43,7 +20,7 @@ const ModelForm: React.FC = () => {
       label: "Model Name",
       type: "text",
       required: true,
-      placeholder: "Nhập tên model",
+      placeholder: "Enter name",
       maxLength: 256,
       validation: validateMaxLength(256),
     },
@@ -63,7 +40,7 @@ const ModelForm: React.FC = () => {
       label: "Description",
       type: "textarea",
       required: true,
-      placeholder: "Nhập mô tả...",
+      placeholder: "Enter description",
       rows: 3,
       maxLength: 256,
       validation: validateMaxLength(256),
@@ -113,7 +90,7 @@ const ModelForm: React.FC = () => {
     },
     {
       name: "isPrivate",
-      label: "Đây là model riêng tư",
+      label: "Private Model",
       type: "checkbox",
       required: false,
     },
@@ -125,7 +102,6 @@ const ModelForm: React.FC = () => {
   ): Promise<void> => {
     console.log("Submitting model data:", data);
 
-    // SỬA: Log thông tin files
     if (data.attachment && Array.isArray(data.attachment)) {
       console.log(
         "Files uploaded:",

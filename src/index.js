@@ -1,14 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./views/App";
-import reportWebVitals from "./reportWebVitals";
-import "./styles/global.scss";
-import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from "./store/reducers/rootReducer";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { JSX } from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { createStore } from "redux";
+import reportWebVitals from "./reportWebVitals";
+import rootReducer from "./store/reducers/rootReducer.ts";
+import "./styles/global.scss";
+import App from "./views/App";
 
 const reduxStore = createStore(
   rootReducer,
@@ -18,11 +18,9 @@ const reduxStore = createStore(
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={reduxStore}>
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
 );
 

@@ -1,37 +1,48 @@
-import React, { Fragment, useState } from "react";
-import { toast } from "react-toastify";
-import _ from "lodash";
+import React, { Fragment, JSX, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { State, User } from "../../store/reducers/rootReducer";
 
-const UserComponent = (props) => {
-  const userList = useSelector((state) => state.userList);
-  const isShowing = useSelector((state) => state.isShowing);
+const initUser = {
+  id: 0,
+  name: "",
+  salary: "",
+};
+
+interface UserComponentProps {
+  userList: User[];
+}
+
+const UserComponent = (props: UserComponentProps): JSX.Element => {
+  const { userList } = props;
+  const isShowing = useSelector((state: State) => state.isShowing);
   const dispatch = useDispatch();
-  const [editUser, setEditUser] = useState({ name: "", salary: "" });
+  const [editUser, setEditUser] = useState<User>(initUser);
   let isEmptyObj = Object.keys(editUser).length === 0;
 
-  const handleSave = (updatedUser) => {
+  const handleSave = (updatedUser: User) => {
     const newUserList = userList.map((user) =>
       user.id === updatedUser.id ? { ...user, ...editUser } : user
     );
     dispatch({ type: "CHANGE_USER_LIST", payload: newUserList });
-    setEditUser({});
+    setEditUser(initUser);
     toast.success(`Update user ${updatedUser.name} successfully!`);
   };
 
-  const handleDelete = (deletedUser) => {
-    const updatedUserList = userList.filter((user) => user.id !== deletedUser.id);
+  const handleDelete = (currentUser: User) => {
+    const updatedUserList = userList.filter(
+      (user) => user.id !== currentUser.id
+    );
     dispatch({ type: "CHANGE_USER_LIST", payload: updatedUserList });
-    toast.success(`Delele user ${deletedUser.name} successfully!`);
+    toast.success(`Deleted user ${currentUser.name} successfully!`);
   };
 
-  const handleEditUser = (e, type) => {
-    const editUserTemp = _.cloneDeep(editUser);
-    editUserTemp[type] = e.target.value;
-    setEditUser(editUserTemp);
+  const handleEditUser = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedUser = { ...editUser, [e.target.name]: e.target.value };
+    setEditUser(updatedUser);
   };
 
-  const handleChangeShowUserList = () => {
+  const handleChangeShow = () => {
     dispatch({ type: "UPDATE_SHOWING_LIST", payload: !isShowing });
   };
 
@@ -39,7 +50,7 @@ const UserComponent = (props) => {
     <Fragment>
       <div className="show_content">
         <div>
-          <button onClick={handleChangeShowUserList}>
+          <button onClick={handleChangeShow}>
             {isShowing ? "Hide" : "Show"}
           </button>
         </div>
@@ -54,11 +65,13 @@ const UserComponent = (props) => {
                     <>
                       <input
                         value={editUser.name}
-                        onChange={(e) => handleEditUser(e, "name")}
+                        name="name"
+                        onChange={handleEditUser}
                       />
                       <input
                         value={editUser.salary}
-                        onChange={(e) => handleEditUser(e, "salary")}
+                        name="salary"
+                        onChange={handleEditUser}
                       />
                     </>
                   ) : (
@@ -68,11 +81,13 @@ const UserComponent = (props) => {
                   )}
                 </span>
                 <div>
-                  {isEditUser ? (
-                    <button onClick={() => handleSave(item)}>Save</button>
-                  ) : (
-                    <button onClick={() => setEditUser(item)}>Edit</button>
-                  )}
+                  <button
+                    onClick={() =>
+                      isEditUser ? handleSave(item) : setEditUser(item)
+                    }
+                  >
+                    {isEditUser ? "Save" : "Edit"}
+                  </button>
                   <button onClick={() => handleDelete(item)}>Delete</button>
                 </div>
               </div>

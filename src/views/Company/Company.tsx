@@ -1,13 +1,12 @@
+import React from "react";
 import { useState } from "react";
 import BoxRemark from "../../components/BoxRemark/BoxRemark";
 
 const Company = () => {
   const [value, setValue] = useState("");
-  const [listRemark, setListRemark] = useState([]);
-  const onDataChange = (type, e) => {
-    if (type === "remark") {
-      setValue(e.target.value);
-    }
+  const [listRemark, setListRemark] = useState<string[]>([]);
+  const handleDataChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(event.target.value);
   };
   const onSubmitData = () => {
     setListRemark([...listRemark, value]);
@@ -15,7 +14,7 @@ const Company = () => {
   };
   return (
     <BoxRemark
-      onDataChange={onDataChange}
+      onDataChange={handleDataChange}
       onSubmitData={onSubmitData}
       remark={value}
       listRemark={listRemark}

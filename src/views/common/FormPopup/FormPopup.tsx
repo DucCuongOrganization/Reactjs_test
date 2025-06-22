@@ -545,7 +545,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
           className={`${baseClassName} form-field--select`}
           {...commonProps}
         >
-          <option value="">Chọn {field.label.toLowerCase()}</option>
+          <option value="">Choose {field.label.toLowerCase()}</option>
           {field.options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -579,10 +579,10 @@ const FormPopup: React.FC<FormPopupProps> = ({
             accept={field.accept}
             multiple={field.multiple} // THÊM: Hỗ trợ multiple
             className={`${baseClassName} form-field--file`}
-            onChange={(e) => handleFileChange(field.name, e.target.files)} // SỬA: Custom onChange
+            onChange={(e) => handleFileChange(field.name, e.target.files)}
           />
           {field.accept && (
-            <p className="form-field-file__hint">Chấp nhận: {field.accept}</p>
+            <p className="form-field-file__hint">Accept: {field.accept}</p>
           )}
           {/* THÊM: Render file previews */}
           {renderFilePreview(field.name)}

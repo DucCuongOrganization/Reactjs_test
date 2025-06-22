@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { State } from "../../store/reducers/rootReducer";
 
 const initUser = {
   name: "",
@@ -9,26 +10,35 @@ const initUser = {
 
 const AddComponent = () => {
   const [user, setUser] = useState(initUser);
-  const userList = useSelector((state) => state.userList);
+  const userList = useSelector((state: State) => state.userList);
   const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    if (!user.name || !user.salary) {
+  const handleFormSubmit = () => {
+    const { name, salary } = user;
+    console.log(name + " " + salary);
+    if (!name || !salary) {
       toast.error("Please enter name and salary");
       return;
     }
-    const userInfo = {
+
+    const newUser = {
       id: userList.length + 1,
-      name: user.name,
-      salary: user.salary,
+      name,
+      salary,
     };
-    dispatch({ type: "CHANGE_USER_LIST", payload: [...userList, userInfo] });
-    toast.success(`Add user ${user.name} successfully!`);
+
+    dispatch({ type: "CHANGE_USER_LIST", payload: [...userList, newUser] });
+    toast.success(`Add user ${name} successfully!`);
     setUser(initUser);
   };
 
-  const onChangeInput = (value, type = "name" | "salary") => {
-    setUser({ ...user, [type]: value });
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
@@ -37,22 +47,22 @@ const AddComponent = () => {
         <label htmlFor="fname">First name:</label>
         <input
           type="text"
-          id="fname"
+          name="name"
           value={user.name}
-          onChange={(e) => onChangeInput(e.target.value, "name")}
+          onChange={handleChange}
         />
       </div>
       <div className="input_form">
         <label htmlFor="lname">Salary:</label>
         <input
           type="text"
-          id="lname"
+          name="salary"
           value={user.salary}
-          onChange={(e) => onChangeInput(e.target.value, "salary")}
+          onChange={handleChange}
         />
       </div>
       <br />
-      <input type="button" value="Submit" onClick={() => handleSubmit()} />
+      <input type="button" value="Submit" onClick={handleFormSubmit} />
     </form>
   );
 };

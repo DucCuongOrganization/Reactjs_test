@@ -1,31 +1,28 @@
+import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import RandomUser from "../components/RandomUser/RandomUser";
 import "./App.scss";
-import Home from "./Examples/Home";
-import JobComponent from "./Examples/JobComponent";
-import ModelForm from "./Examples/ModelForm";
-import Nav from "./Nav/Nav";
-import DetailUser from "./Users/DetailUser";
-import ListUsers from "./Users/ListUsers";
+import NavBar from "./NavBar/NavBar";
+import Home from "./Page/Home";
+import JobComponent from "./Page/JobComponent";
+import ModelForm from "./Page/ModelForm/ModelForm";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Nav />
+        <NavBar />
         <Switch>
           <Route path="/" component={Home} exact />
-          <Route path="/job" component={JobComponent} />
+          <Route path="/jobs" component={JobComponent} />
           <Route path="/random" component={RandomUser} />
-          <Route path="/users" component={ListUsers} exact />
-          <Route path="/users/:id" component={DetailUser} />
           <Route path="/model" component={ModelForm} />
         </Switch>
       </header>
       <ToastContainer
         autoClose={1000}
-        toastStyle={{
+        style={{
           minHeight: "40px",
           fontSize: "14px",
         }}

@@ -1,69 +1,78 @@
-import { Fragment, useState } from "react";
-import { sum, substract, multiply, divide } from "../../utils/mathFunction";
-import PropTypes from "prop-types";
+import React, { Fragment, JSX, useState } from "react";
+import * as Math from "../../utils/mathFunction";
+
+type CalculatorProps = {
+  defaultA?: number;
+  defaultB?: number;
+  defaultOperation?: string;
+};
 
 const OPERATORS = ["+", "-", "x", "/"];
 
-const Calculator = ({ defaultA = 0, defaultB = 0, defaultOperation = "+" }) => {
-  const [inputValueA, setInputValueA] = useState(
+const Calculator = ({
+  defaultA = 0,
+  defaultB = 0,
+  defaultOperation = "+",
+}: CalculatorProps): JSX.Element => {
+  const [inputValueA, setInputValueA] = useState<number>(
     !defaultA || isNaN(defaultA) ? 0 : Number(defaultA)
   );
-  const [inputValueB, setInputValueB] = useState(
+  const [inputValueB, setInputValueB] = useState<number>(
     !defaultB || isNaN(defaultB) ? 0 : Number(defaultB)
   );
-  const [operator, setOperator] = useState(
+  const [operator, setOperator] = useState<string>(
     OPERATORS.includes(defaultOperation) ? defaultOperation : "+"
   );
 
-  // We need that because we don't want to write "0"
-  //in the input when it's empty
   const valueA = inputValueA || 0;
   const valueB = inputValueB || 0;
 
-  function getResult() {
+  function getResult(): string | number {
     switch (operator) {
       case "+":
-        return sum(valueA, valueB);
+        return Math.sum(valueA, valueB);
       case "-":
-        return substract(valueA, valueB);
+        return Math.substract(valueA, valueB);
       case "x":
-        return multiply(valueA, valueB);
+        return Math.multiply(valueA, valueB);
       case "/":
         return divideSafely(valueA, valueB);
       default:
         return "No operator provided";
     }
   }
-  function divideSafely(a_, b_) {
+
+  function divideSafely(a: number, b: number): string | number {
     try {
-      return divide(a_, b_);
+      return Math.divide(a, b);
     } catch (err) {
-      return err.message;
+      return (err as Error).message;
     }
   }
-  const renderInputA = () => (
+
+  const renderInputA = (): JSX.Element => (
     <input
       data-testid="inputA"
       type="number"
       value={inputValueA}
       onChange={(e) =>
-        setInputValueA(e.target.value ? Number.parseInt(e.target.value) : "")
+        setInputValueA(e.target.value ? Number.parseInt(e.target.value) : 0)
       }
     />
   );
 
-  const renderInputB = () => (
+  const renderInputB = (): JSX.Element => (
     <input
       data-testid="inputB"
       type="number"
       value={inputValueB}
       onChange={(e) =>
-        setInputValueB(e.target.value ? Number.parseInt(e.target.value) : "")
+        setInputValueB(e.target.value ? Number.parseInt(e.target.value) : 0)
       }
     />
   );
 
-  const renderSelectBox = () => (
+  const renderSelectBox = (): JSX.Element => (
     <div>
       <select
         data-testid="operator"
@@ -90,12 +99,6 @@ const Calculator = ({ defaultA = 0, defaultB = 0, defaultOperation = "+" }) => {
       <span data-testid="result">{getResult()}</span>
     </Fragment>
   );
-};
-
-Calculator.propTypes = {
-  defaultA: PropTypes.any,
-  defaultB: PropTypes.any,
-  defaultOperation: PropTypes.any,
 };
 
 export default Calculator;
