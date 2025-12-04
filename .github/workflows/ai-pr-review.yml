@@ -15,16 +15,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # quan trọng
+
+      - name: Generate git diff
+        run: |
+          git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} > diff.txt
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Generate git diff
-        run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
-          git diff origin/${{ github.base_ref }}...HEAD > diff.txt
 
       - name: Run AI review
         env:
