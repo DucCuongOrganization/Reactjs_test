@@ -7,6 +7,7 @@ import NavBar from "./NavBar/NavBar";
 import Home from "./Page/Home";
 import JobComponent from "./Page/JobComponent";
 import ModelForm from "./Page/ModelForm/ModelForm";
+import SortableTodoList from "./Page/TodoList/TodoList";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/jobs" component={JobComponent} />
           <Route path="/random" component={RandomUser} />
           <Route path="/model" component={ModelForm} />
+          <Route path="/todo-list" component={SortableTodoList} />
         </Switch>
       </header>
       <ToastContainer

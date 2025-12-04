@@ -20,6 +20,9 @@ const NavBar: React.FC = () => {
       <NavLink activeClassName="active" to="/model">
         Model Form
       </NavLink>
+      <NavLink activeClassName="active" to="/todo-list">
+        To Do List
+      </NavLink>
     </nav>
   );
 };
