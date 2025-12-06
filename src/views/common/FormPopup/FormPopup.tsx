@@ -307,7 +307,37 @@ const FormPopup: React.FC<FormPopupProps> = ({
   };
 
   const validateForm = (): boolean => {
-    if (!validationSchema) return true;
+    if (!validationSchema) {
+      // Fallback validation for required fields if no schema is provided
+      const formData = collectFormData(fields, refsMap.current, filePreviews);
+      const newErrors: Record<string, string> = {};
+      let isValid = true;
+      let firstErrorMessage: string | null = null;
+
+      fields.forEach((field) => {
+        if (field.required) {
+          const value = formData[field.name];
+          if (
+            value === "" ||
+            (Array.isArray(value) && value.length === 0) ||
+            (field.type === "checkbox" && value === false)
+          ) {
+            const errorMessage = `${field.label} is required`;
+            newErrors[field.name] = errorMessage;
+            if (!firstErrorMessage) {
+              firstErrorMessage = errorMessage;
+            }
+            isValid = false;
+          }
+        }
+      });
+
+      setErrors(newErrors);
+      if (!isValid && firstErrorMessage) {
+        showToast(firstErrorMessage, "error");
+      }
+      return isValid;
+    }
 
     const formData = collectFormData(fields, refsMap.current, filePreviews);
     const validationResult = validationSchema.safeParse(formData);
@@ -377,7 +407,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
     setHasAttemptedSubmit(true);
 
     if (!validateForm()) {
-      focusFirstError();
+      focusFirstError(errors);
       return;
     }
 
@@ -399,8 +429,8 @@ const FormPopup: React.FC<FormPopupProps> = ({
     }
   };
 
-  const focusFirstError = () => {
-    const errorFields = Object.keys(errors);
+  const focusFirstError = (currentErrors: Record<string, string>) => {
+    const errorFields = Object.keys(currentErrors);
     if (errorFields.length > 0) {
       const firstErrorField = errorFields[0];
       const ref = refsMap.current[firstErrorField];
