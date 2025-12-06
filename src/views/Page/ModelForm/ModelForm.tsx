@@ -5,8 +5,8 @@ import FormPopup, { FieldConfig } from "../../common/FormPopup/FormPopup";
 const modelFormSchema = z
   .object({
     modelName: z.string().min(1, "Model Name is required").max(256),
-    modelType: z.enum(["A", "B"], {
-      required_error: "Model Type is required",
+    modelType: z.enum(["A", "B"] as const, {
+      message: "Model Type is required",
     }),
     description: z.string().min(1, "Description is required").max(256),
     startDate: z.string().min(1, "Start Date is required"),
@@ -27,10 +27,13 @@ const modelFormSchema = z
     }
   );
 
+// Infer the type from the schema
+type ModelFormData = z.infer<typeof modelFormSchema>;
+
 const ModelForm: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [currentData, setCurrentData] = useState<Record<string, any>>({});
+  const [currentData, setCurrentData] = useState<Partial<ModelFormData>>({});
 
   // Field configurations
   const modelFields: FieldConfig[] = [
@@ -112,9 +115,7 @@ const ModelForm: React.FC = () => {
   ];
 
   // Mock API function
-  const handleModelSubmit = async (
-    data: Record<string, any>
-  ): Promise<void> => {
+  const handleModelSubmit = async (data: ModelFormData): Promise<void> => {
     console.log("Submitting model data:", data);
 
     if (data.attachment && Array.isArray(data.attachment)) {

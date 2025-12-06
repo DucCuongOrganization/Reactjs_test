@@ -29,14 +29,14 @@ export interface FieldConfig {
   multiple?: boolean;
 }
 
-interface FormPopupProps {
+interface FormPopupProps<T = Record<string, any>> {
   isOpenPopup: boolean;
   onClose: () => void;
   title: string;
   fields: FieldConfig[];
-  onSubmit: (data: Record<string, any>) => Promise<void>;
+  onSubmit: (data: T) => Promise<void>;
   validationSchema?: ZodType<any>;
-  initialData?: Record<string, any>;
+  initialData?: Partial<T>;
   submitButtonText?: string;
   isLoading?: boolean;
   maxWidth?: string;
@@ -156,18 +156,18 @@ const getFileIcon = (file: File): string => {
   }
 };
 
-const FormPopup: React.FC<FormPopupProps> = ({
+const FormPopup = <T = Record<string, any>,>({
   isOpenPopup,
   onClose,
   title,
   fields,
   onSubmit,
   validationSchema,
-  initialData = {},
+  initialData = {} as Partial<T>,
   submitButtonText = "Submit",
   isLoading = false,
   maxWidth = "max-w-2xl",
-}) => {
+}: FormPopupProps<T>) => {
   const refsMap = useRef<Record<string, React.RefObject<any>>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -223,7 +223,8 @@ const FormPopup: React.FC<FormPopupProps> = ({
   const resetForm = () => {
     fields.forEach((field) => {
       const ref = refsMap.current[field.name];
-      const initialValue = initialData[field.name] ?? field.defaultValue ?? "";
+      const initialValue =
+        (initialData as any)[field.name] ?? field.defaultValue ?? "";
       setFieldValue(field, ref, initialValue);
     });
   };
@@ -415,7 +416,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
 
     try {
       const formData = collectFormData(fields, refsMap.current, filePreviews); // SỬA: Thêm filePreviews
-      await onSubmit(formData);
+      await onSubmit(formData as T);
       showToast("Dữ liệu đã được lưu thành công!", "success");
 
       setTimeout(() => {

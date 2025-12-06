@@ -1,12 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import RandomUser from "../components/RandomUser/RandomUser";
 import axios from "axios";
+import RandomUser from "../components/RandomUser/RandomUser";
 jest.mock("axios");
+
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("<RandomUser/>", () => {
   test.only("loads user when click on the button", async () => {
     render(<RandomUser />);
-    axios.get.mockResolvedValueOnce({ data: MOCK_USER_RESPONSE });
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_USER_RESPONSE });
     const button = screen.getByRole("button");
 
     fireEvent.click(button);
@@ -14,7 +16,7 @@ describe("<RandomUser/>", () => {
     let paragraphElement = await screen.findByRole("paragraph");
     expect(titleElement.textContent).toBe("Lewis Gutierrez");
     expect(paragraphElement.textContent).toBe("lewis.gutierrez@example.com");
-    axios.get.mockResolvedValueOnce({ data: MOCK_USER_RESPONSE_2 });
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_USER_RESPONSE_2 });
 
     fireEvent.click(button);
     titleElement = await screen.findByRole("heading", { level: 2 });

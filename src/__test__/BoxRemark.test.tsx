@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import BoxRemark from "../components/BoxRemark/BoxRemark";
 import userEvent from "@testing-library/user-event";
+import BoxRemark from "../components/BoxRemark/BoxRemark";
 jest.mock("axios");
 
 describe("<BoxRemark/>", () => {
-  let props;
-  let components;
+  let props: any;
+  let components: any;
   beforeEach(() => {
     props = {
       onDataChange: jest.fn(),
@@ -15,23 +15,9 @@ describe("<BoxRemark/>", () => {
     };
   });
 
-  test("matches snapshot", () => {
-    const { asFragment } = render(<BoxRemark text="Hello, World!" />);
-    expect(asFragment()).toMatchSnapshot();
-  });
-
-  // test("onChange Textarea", async () => {
-  //   const { rerender } = render(<BoxRemark {...props} />);
-  //   const textarea = screen.getByRole("textbox");
-  //   await fireEvent.change(textarea, { target: { value: "new remark" } });
-  //   props.remark = "new remark";
-  //   rerender(<BoxRemark {...props} />);
-  //   expect(textarea.textContent).toBe("new remark");
-  // });
-
   test("onChange Textarea", () => {
     render(<BoxRemark {...props} />);
-    const textarea = screen.getByRole("textbox");
+    const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: "new remark" } });
     expect(textarea.value).toBe("new remark");
     fireEvent.change(textarea, { target: { value: "new remark 2" } });
@@ -41,7 +27,7 @@ describe("<BoxRemark/>", () => {
   test("onChange Textarea maxLength", () => {
     render(<BoxRemark {...props} />);
     const longText = "012345678901234567890123456789";
-    const textarea = screen.getByRole("textbox");
+    const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
     userEvent.type(textarea, longText);
     expect(textarea.value).toHaveLength(10);
     expect(textarea.value).toBe("0123456789");

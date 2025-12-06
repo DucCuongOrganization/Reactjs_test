@@ -29,13 +29,13 @@ describe("Math functions", () => {
   });
 
   test("divides correctly 2 values", () => {
-    expect(() => divide()).toThrowError("You can't divide by 0");
+    expect(() => divide()).toThrow("You can't divide by 0");
     expect(divide(2, 3)).toBe(0.67);
     expect(divide(0, -1)).toBe(0);
     expect(divide(1, 1)).toBeGreaterThan(0);
     expect(divide(-1, -1)).toBe(1);
     expect(divide(-1.5, 0.5)).toBe(-3);
     expect(() => divide(0, 1)).not.toThrow();
-    expect(() => divide(0, 0)).toThrowError("You can't divide by 0");
+    expect(() => divide(0, 0)).toThrow("You can't divide by 0");
   });
 });

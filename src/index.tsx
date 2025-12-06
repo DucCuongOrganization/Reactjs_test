@@ -8,7 +8,9 @@ import { store } from "./store/index";
 import "./styles/global.scss";
 import App from "./views/App";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 root.render(
   <Provider store={store}>
     <BrowserRouter>

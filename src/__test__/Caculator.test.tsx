@@ -1,4 +1,3 @@
-import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Calculator from "../components/Caculator/Caculator";
 
@@ -38,7 +37,7 @@ describe("<Caculator/>", () => {
   });
 
   test("uses correctly default values with subtract", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="-" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="-" />);
     const { getValueA, getValueB, getOperator, getResult } = getCalculator();
 
     expect(getValueA()).toBe("12");
@@ -48,7 +47,7 @@ describe("<Caculator/>", () => {
   });
 
   test("uses correctly default values with mutiply", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="x" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="x" />);
     const { getValueA, getValueB, getOperator, getResult } = getCalculator();
 
     expect(getValueA()).toBe("12");
@@ -58,7 +57,7 @@ describe("<Caculator/>", () => {
   });
 
   test("when operator is wrong", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="x" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="x" />);
     const { getValueA, getValueB, getOperator, getResult } = getCalculator();
     fireEvent.change(screen.getByTestId("operator"), {
       target: { value: "" },
@@ -68,7 +67,7 @@ describe("<Caculator/>", () => {
   });
 
   test("caculator correctly when uses update a input", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="x" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="x" />);
     const { getValueA, getValueB, getOperator, getResult } = getCalculator();
 
     fireEvent.change(screen.getByTestId("inputA"), { target: { value: "3" } });
@@ -84,7 +83,7 @@ describe("<Caculator/>", () => {
   });
 
   test("caculator correctly when uses update a input incorrectly", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="x" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="x" />);
     const { getResult } = getCalculator();
 
     fireEvent.change(screen.getByTestId("inputA"), { target: { value: "" } });
@@ -110,16 +109,22 @@ describe("<Caculator/>", () => {
   });
 
   test("when operator is wrong when is default Operation", () => {
-    render(<Calculator defaultA={12} defaultB={"10"} defaultOperation="!" />);
+    render(<Calculator defaultA={12} defaultB={10} defaultOperation="!" />);
     const { getOperator } = getCalculator();
 
     expect(getOperator()).toBe("+");
   });
 });
 
-const getCalculator = () => ({
-  getValueA: () => screen.getByTestId("inputA").value,
-  getValueB: () => screen.getByTestId("inputB").value,
-  getOperator: () => screen.getByTestId("operator").value,
+const getCalculator = (): {
+  getValueA: () => string;
+  getValueB: () => string;
+  getOperator: () => string;
+  getResult: () => string | null;
+} => ({
+  getValueA: () => (screen.getByTestId("inputA") as HTMLInputElement).value,
+  getValueB: () => (screen.getByTestId("inputB") as HTMLInputElement).value,
+  getOperator: () =>
+    (screen.getByTestId("operator") as HTMLSelectElement).value,
   getResult: () => screen.getByTestId("result").textContent,
 });
