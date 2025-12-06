@@ -1,17 +1,36 @@
 import React, { useState } from "react";
+import { z } from "zod";
 import FormPopup, { FieldConfig } from "../../common/FormPopup/FormPopup";
-import {
-  validateEndDate,
-  validateMaxLength,
-  validateURL,
-} from "../../../utils/common.function";
+
+const modelFormSchema = z
+  .object({
+    modelName: z.string().min(1, "Model Name is required").max(256),
+    modelType: z.enum(["A", "B"], {
+      required_error: "Model Type is required",
+    }),
+    description: z.string().min(1, "Description is required").max(256),
+    startDate: z.string().min(1, "Start Date is required"),
+    endDate: z.string().optional(),
+    webURL: z.string().url("Invalid URL format").optional().or(z.literal("")),
+    licenseType: z.string().optional(),
+    attachment: z.any().optional(),
+    isPrivate: z.boolean(),
+  })
+  .refine(
+    (data) =>
+      !data.endDate ||
+      !data.startDate ||
+      new Date(data.endDate) > new Date(data.startDate),
+    {
+      message: "End Date must be after Start Date",
+      path: ["endDate"],
+    }
+  );
 
 const ModelForm: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [currentData, setCurrentData] = useState<Record<string, any>>({});
-
-  // Simplified validation functions that return boolean
 
   // Field configurations
   const modelFields: FieldConfig[] = [
@@ -22,7 +41,6 @@ const ModelForm: React.FC = () => {
       required: true,
       placeholder: "Enter name",
       maxLength: 256,
-      validation: validateMaxLength(256),
     },
     {
       name: "modelType",
@@ -43,7 +61,6 @@ const ModelForm: React.FC = () => {
       placeholder: "Enter description",
       rows: 3,
       maxLength: 256,
-      validation: validateMaxLength(256),
     },
     {
       name: "startDate",
@@ -56,7 +73,6 @@ const ModelForm: React.FC = () => {
       label: "End Date",
       type: "date",
       required: false,
-      validation: validateEndDate,
       style: { width: "50%" },
     },
     {
@@ -65,7 +81,6 @@ const ModelForm: React.FC = () => {
       type: "text",
       required: false,
       placeholder: "https://example.com",
-      validation: validateURL,
     },
     {
       name: "licenseType",
@@ -168,6 +183,7 @@ const ModelForm: React.FC = () => {
         title={isEditMode ? "Edit Model" : "Create new Model"}
         fields={modelFields}
         onSubmit={handleModelSubmit}
+        validationSchema={modelFormSchema}
         initialData={currentData}
         submitButtonText={isEditMode ? "Update" : "Create"}
         maxWidth="form-popup--large"
