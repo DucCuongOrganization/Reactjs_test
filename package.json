@@ -12,7 +12,6 @@
     "bootstrap": "^5.3.7",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
-    "react_tranning": "file:",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
@@ -41,10 +40,7 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ],
-    "rules": {
-      "react-hooks/exhaustive-deps": "off"
-    }
+    ]
   },
   "browserslist": {
     "production": [
