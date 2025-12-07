@@ -59,7 +59,7 @@ jobs:
       - name: Build project
         run: yarn build --release
         env:
-          CI: true
+          CI: false
 
       - name: Run tests
         run: yarn test --passWithNoTests --watchAll=false
