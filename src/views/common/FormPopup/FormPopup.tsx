@@ -204,7 +204,7 @@ const FormPopup = <T = Record<string, any>,>({
   fields,
   onSubmit,
   validationSchema,
-  initialData = {} as Partial<T>,
+  initialData,
   submitButtonText = "Submit",
   isLoading = false,
   maxWidth = "max-w-2xl",
