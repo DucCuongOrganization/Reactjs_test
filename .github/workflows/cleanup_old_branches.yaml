@@ -32,6 +32,7 @@ jobs:
           fetch-depth: 0
 
       - name: Delete old branches
+        id: cleanup
         env:
           DAYS_OLD: ${{ github.event.inputs.days || '30' }}
           DRY_RUN: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.dry_run || 'true' }}
@@ -143,10 +144,20 @@ jobs:
           echo "failed_count=$failed_count" >> $GITHUB_OUTPUT
           echo "kept_count=${#branches_to_keep[@]}" >> $GITHUB_OUTPUT
 
+          # Save branch lists to env for summary
+          {
+            echo "BRANCHES_TO_DELETE<<EOF"
+            for item in "${branches_to_delete[@]}"; do
+              echo "$item"
+            done
+            echo "EOF"
+          } >> $GITHUB_ENV
+
       - name: Create summary
         env:
           DAYS_OLD: ${{ github.event.inputs.days || '30' }}
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.dry_run || 'true' }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           echo "### 🧹 Branch Cleanup Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -161,6 +172,27 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Protected branches:** main, dev, stg, prd" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Display branches older than threshold
+          if [ -n "$BRANCHES_TO_DELETE" ]; then
+            echo "### 🗑️ Branches Older Than $DAYS_OLD Days" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Branch | Status | Last Commit | Link |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|--------|-------------|------|" >> $GITHUB_STEP_SUMMARY
+            
+            while IFS= read -r item; do
+              if [ -n "$item" ]; then
+                IFS='|' read -r branch date status <<< "$item"
+                branch_url="$REPO_URL/tree/$branch"
+                echo "| \`$branch\` | $status | $date | [View]($branch_url) |" >> $GITHUB_STEP_SUMMARY
+              fi
+            done <<< "$BRANCHES_TO_DELETE"
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✨ **No branches older than $DAYS_OLD days found!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
 
           if [ "$DRY_RUN" = "false" ]; then
             echo "⚠️ **Warning:** This workflow deletes both merged and unmerged branches!" >> $GITHUB_STEP_SUMMARY
