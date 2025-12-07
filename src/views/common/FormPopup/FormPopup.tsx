@@ -224,7 +224,9 @@ const FormPopup = <T = Record<string, any>,>({
     fields.forEach((field) => {
       const ref = refsMap.current[field.name];
       const initialValue =
-        (initialData as any)[field.name] ?? field.defaultValue ?? "";
+        (initialData && field.name in initialData
+          ? initialData[field.name as keyof typeof initialData]
+          : field.defaultValue) ?? "";
       setFieldValue(field, ref, initialValue);
     });
   };
