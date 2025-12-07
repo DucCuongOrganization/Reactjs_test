@@ -5,8 +5,9 @@ on:
   pull_request:
     branches:
       - main
-      - prd
+      - dev
       - stg
+      - prd
     types: [opened, synchronize, reopened]
 
 permissions:
