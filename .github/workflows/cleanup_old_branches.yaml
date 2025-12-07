@@ -34,7 +34,7 @@ jobs:
       - name: Delete old branches
         env:
           DAYS_OLD: ${{ github.event.inputs.days || '30' }}
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.dry_run || 'true' }}
         run: |
           echo "🔍 Configuration:"
           echo "   Days threshold: $DAYS_OLD days"
