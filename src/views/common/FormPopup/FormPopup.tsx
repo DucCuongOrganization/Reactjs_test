@@ -29,13 +29,54 @@ export interface FieldConfig {
   multiple?: boolean;
 }
 
+/**
+ * Props for the FormPopup component.
+ *
+ * @template T - The type of data that will be submitted. Defaults to Record<string, any>.
+ *
+ * @remarks
+ * **Type Safety Contract:**
+ * When using a generic type T with validationSchema, consumers MUST ensure that:
+ * 1. The validationSchema's output type matches the generic type T
+ * 2. The initialData shape conforms to Partial<T>
+ *
+ * TypeScript cannot enforce compile-time alignment between the schema and T,
+ * so runtime validation via the schema is the primary type safety mechanism.
+ *
+ * @example
+ * ```tsx
+ * // Define your schema and infer the type
+ * const userSchema = z.object({
+ *   name: z.string(),
+ *   email: z.string().email(),
+ * });
+ * type UserFormData = z.infer<typeof userSchema>;
+ *
+ * // Use the inferred type as the generic parameter
+ * <FormPopup<UserFormData>
+ *   validationSchema={userSchema}
+ *   onSubmit={async (data) => {
+ *     // data is typed as UserFormData
+ *   }}
+ * />
+ * ```
+ */
 interface FormPopupProps<T = Record<string, any>> {
   isOpenPopup: boolean;
   onClose: () => void;
   title: string;
   fields: FieldConfig[];
+  /**
+   * Callback invoked with validated form data.
+   * The data will be cast to type T after validation.
+   */
   onSubmit: (data: T) => Promise<void>;
+  /**
+   * Optional Zod validation schema.
+   * IMPORTANT: The schema's output type should match the generic type T.
+   */
   validationSchema?: ZodType<any>;
+  /** Initial form data. Should conform to Partial<T>. */
   initialData?: Partial<T>;
   submitButtonText?: string;
   isLoading?: boolean;
