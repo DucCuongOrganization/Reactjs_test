@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import "./Home.scss";
 
 const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div className="home-container">
+      <h1>Welcome to Todo App</h1>
+      <p>
+        Manage your tasks efficiently with our modern todo list application.
+      </p>
+    </div>
+  );
+};
 
-export default Home
+export default Home;

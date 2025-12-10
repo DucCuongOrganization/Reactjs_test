@@ -1,67 +1,9 @@
-@import "./Page/ModelForm/ModelForm";
-@import "./Page/Attachment";
-
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 20vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+  background-color: #ffffff;
   min-height: 100vh;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  width: 60vw;
-  gap: 10px;
-
-  .input_form {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-.show_content {
-  margin: 20px auto;
-  width: 60vw;
-
-  .show_item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-
-    &:first-child {
-      border-top: 1px solid #eee;
-      margin-top: 10px;
-      width: 70%;
-    }
-  }
-}
-
-.algin-item {
-  display: flex;
-  align-items: center;
+  color: #1f2937;
 }

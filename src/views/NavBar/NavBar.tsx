@@ -1,26 +1,53 @@
+import { Menu } from "antd";
 import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { ReactComponent as CheckCircleIcon } from "../../assets/svg/check-circle.svg";
+import { ReactComponent as HomeIcon } from "../../assets/svg/home.svg";
+import { useAppDispatch } from "../../store/hooks";
+import { resetFilters } from "../../store/slices/todoSlice";
 import "./Nav.scss";
-import { NavLink } from "react-router-dom";
 
 const NavBar: React.FC = () => {
+  const history = useHistory();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  // Determine selected key based on current path
+  const getSelectedKey = () => {
+    if (location.pathname === "/") return "home";
+    if (location.pathname === "/todo-list") return "todo";
+    return "home";
+  };
+
+  const handleMenuClick = (path: string) => {
+    dispatch(resetFilters()); // Reset filters when navigating
+    history.push(path);
+  };
+
+  const menuItems = [
+    {
+      key: "home",
+      icon: <HomeIcon className="nav-icon" />,
+      label: "Home",
+      onClick: () => handleMenuClick("/"),
+    },
+    {
+      key: "todo",
+      icon: <CheckCircleIcon className="nav-icon" />,
+      label: "Todo List",
+      onClick: () => handleMenuClick("/todo-list"),
+    },
+  ];
+
   return (
-    <nav className="topnav">
-      <NavLink exact activeClassName="active" to="/">
-        Home
-      </NavLink>
-      <NavLink activeClassName="active" to="/jobs">
-        Jobs
-      </NavLink>
-      <NavLink activeClassName="active" to="/random">
-        Random User
-      </NavLink>
-      <NavLink activeClassName="active" to="/model">
-        Model Form
-      </NavLink>
-      <NavLink activeClassName="active" to="/todo-list">
-        To Do List
-      </NavLink>
-    </nav>
+    <div className="navbar-container">
+      <Menu
+        mode="horizontal"
+        selectedKeys={[getSelectedKey()]}
+        items={menuItems}
+        className="custom-navbar"
+      />
+    </div>
   );
 };
 

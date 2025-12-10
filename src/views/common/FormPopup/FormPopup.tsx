@@ -1,6 +1,13 @@
+import { DatePicker } from "antd";
+import "antd/dist/reset.css";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { ZodType } from "zod";
+import "./FormPopup.scss";
+
+const { RangePicker } = DatePicker;
 
 // Types
 export interface FieldConfig {
@@ -17,6 +24,7 @@ export interface FieldConfig {
     | "checkbox"
     | "file"
     | "date"
+    | "date-range"
     | "radio";
   required?: boolean;
   placeholder?: string;
@@ -27,6 +35,7 @@ export interface FieldConfig {
   maxLength?: number;
   style?: React.CSSProperties;
   multiple?: boolean;
+  wrapperClassName?: string;
 }
 
 /**
@@ -132,32 +141,18 @@ const setFieldValue = (
         radio.checked = radio.value === value;
       });
     },
+    "date-range": () => {
+      // Set initial value for Ant Design RangePicker
+      // Value should be array of [startDate, endDate] strings
+      // RangePicker will handle conversion internally
+      // Note: This is handled by defaultValue prop in the component
+    },
     default: () => {
       ref.current.value = value;
     },
   };
 
   (fieldHandlers[field.type] || fieldHandlers.default)();
-};
-
-const collectFormData = (
-  fields: FieldConfig[],
-  refsMap: Record<string, React.RefObject<any>>,
-  filePreviews: Record<string, FilePreview[]>
-): Record<string, any> => {
-  const formData: Record<string, any> = {};
-
-  fields.forEach((field) => {
-    if (field.type === "file") {
-      formData[field.name] =
-        filePreviews[field.name]?.map((fp) => fp.file) || [];
-    } else {
-      const ref = refsMap[field.name];
-      formData[field.name] = getFieldValue(field, ref);
-    }
-  });
-
-  return formData;
 };
 
 // THÊM: Utility functions cho file handling
@@ -217,6 +212,9 @@ const FormPopup = <T = Record<string, any>,>({
   const [filePreviews, setFilePreviews] = useState<
     Record<string, FilePreview[]>
   >({});
+  const [dateRangeValues, setDateRangeValues] = useState<
+    Record<string, [Dayjs | null, Dayjs | null] | null>
+  >({});
 
   // Initialize refs for each field
   useEffect(() => {
@@ -257,19 +255,72 @@ const FormPopup = <T = Record<string, any>,>({
     };
   }, [filePreviews]);
 
+  // Collect form data with access to component state
+  const collectFormDataInternal = (): Record<string, any> => {
+    const formData: Record<string, any> = {};
+
+    fields.forEach((field) => {
+      if (field.type === "file") {
+        formData[field.name] =
+          filePreviews[field.name]?.map((fp) => fp.file) || [];
+      } else if (field.type === "date-range") {
+        // Handle date-range specially using state
+        const dates = dateRangeValues[field.name];
+        if (dates && dates[0] && dates[1]) {
+          formData[field.name] = [
+            dates[0].format("YYYY-MM-DD"),
+            dates[1].format("YYYY-MM-DD"),
+          ];
+        } else {
+          formData[field.name] = [undefined, undefined];
+        }
+      } else {
+        const ref = refsMap.current[field.name];
+        formData[field.name] = getFieldValue(field, ref);
+      }
+    });
+
+    return formData;
+  };
+
   const showToast = (message: string, type: "success" | "error") => {
     toast[type](message);
   };
 
   const resetForm = () => {
+    // Reset dateRangeValues from initialData
+    const newDateRangeValues: Record<
+      string,
+      [Dayjs | null, Dayjs | null] | null
+    > = {};
+
     fields.forEach((field) => {
-      const ref = refsMap.current[field.name];
-      const initialValue =
-        (initialData && field.name in initialData
-          ? initialData[field.name as keyof typeof initialData]
-          : field.defaultValue) ?? "";
-      setFieldValue(field, ref, initialValue);
+      if (field.type === "date-range") {
+        const initialValue =
+          initialData && field.name in initialData
+            ? initialData[field.name as keyof typeof initialData]
+            : field.defaultValue;
+
+        if (initialValue && Array.isArray(initialValue)) {
+          const [start, end] = initialValue;
+          newDateRangeValues[field.name] = [
+            start ? dayjs(start) : null,
+            end ? dayjs(end) : null,
+          ];
+        } else {
+          newDateRangeValues[field.name] = null;
+        }
+      } else {
+        const ref = refsMap.current[field.name];
+        const initialValue =
+          (initialData && field.name in initialData
+            ? initialData[field.name as keyof typeof initialData]
+            : field.defaultValue) ?? "";
+        setFieldValue(field, ref, initialValue);
+      }
     });
+
+    setDateRangeValues(newDateRangeValues);
   };
 
   const updateCharCounts = () => {
@@ -353,7 +404,7 @@ const FormPopup = <T = Record<string, any>,>({
   const validateForm = (): boolean => {
     if (!validationSchema) {
       // Fallback validation for required fields if no schema is provided
-      const formData = collectFormData(fields, refsMap.current, filePreviews);
+      const formData = collectFormDataInternal();
       const newErrors: Record<string, string> = {};
       let isValid = true;
       let firstErrorMessage: string | null = null;
@@ -383,7 +434,7 @@ const FormPopup = <T = Record<string, any>,>({
       return isValid;
     }
 
-    const formData = collectFormData(fields, refsMap.current, filePreviews);
+    const formData = collectFormDataInternal();
     const validationResult = validationSchema.safeParse(formData);
 
     if (!validationResult.success) {
@@ -428,23 +479,8 @@ const FormPopup = <T = Record<string, any>,>({
       }
     }
 
-    if (hasAttemptedSubmit) {
-      setTimeout(() => {
-        if (validationSchema) {
-          const formData = collectFormData(
-            fields,
-            refsMap.current,
-            filePreviews
-          );
-          const validationResult = validationSchema.safeParse(formData);
-          if (validationResult.success) {
-            setErrors({});
-          } else {
-            validateForm();
-          }
-        }
-      }, 100);
-    }
+    // Removed real-time validation to allow better UX with date pickers
+    // Validation will only happen on form submit
   };
 
   const handleSubmit = async () => {
@@ -458,13 +494,9 @@ const FormPopup = <T = Record<string, any>,>({
     setIsSubmitting(true);
 
     try {
-      const formData = collectFormData(fields, refsMap.current, filePreviews); // SỬA: Thêm filePreviews
+      const formData = collectFormDataInternal();
       await onSubmit(formData as T);
-      showToast("Dữ liệu đã được lưu thành công!", "success");
-
-      setTimeout(() => {
-        onClose();
-      }, 1500);
+      onClose();
     } catch (error) {
       showToast("Có lỗi xảy ra khi lưu dữ liệu!", "error");
       console.error("Form submission error:", error);
@@ -613,6 +645,30 @@ const FormPopup = <T = Record<string, any>,>({
           </label>
         </div>
       ),
+      "date-range": () => {
+        // Get current value from state
+        const currentValue = dateRangeValues[field.name] || null;
+
+        return (
+          <div style={field.style}>
+            <RangePicker
+              ref={ref}
+              style={{ width: "100%" }}
+              placeholder={["Start Date", "End Date"]}
+              format="YYYY-MM-DD"
+              value={currentValue}
+              onChange={(dates) => {
+                setDateRangeValues((prev) => ({
+                  ...prev,
+                  [field.name]: dates,
+                }));
+                handleFieldChange(field.name);
+              }}
+              className={hasError ? "ant-picker-error" : ""}
+            />
+          </div>
+        );
+      },
       file: () => (
         <div className="form-field-file" style={field.style}>
           <input
@@ -672,7 +728,10 @@ const FormPopup = <T = Record<string, any>,>({
 
         <div className="form-popup__body">
           {fields.map((field) => (
-            <div key={field.name} className="form-group">
+            <div
+              key={field.name}
+              className={`form-group ${field.wrapperClassName || ""}`}
+            >
               {field.type !== "checkbox" && (
                 <label htmlFor={field.name} className="form-label">
                   {field.label}{" "}
