@@ -286,7 +286,7 @@ const FormPopup = <T = Record<string, any>,>({
             dates[1].format("YYYY-MM-DD"),
           ];
         } else {
-          formData[field.name] = [undefined, undefined];
+          formData[field.name] = null;
         }
       } else {
         const ref = refsMap.current[field.name];
@@ -428,6 +428,7 @@ const FormPopup = <T = Record<string, any>,>({
           const value = formData[field.name];
           if (
             value === "" ||
+            value === null ||
             (Array.isArray(value) && value.length === 0) ||
             (field.type === "checkbox" && value === false)
           ) {
