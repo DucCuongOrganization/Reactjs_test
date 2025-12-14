@@ -34,14 +34,26 @@ const todoSchema = z.object({
   name: z.string().min(1, "Task name is required"),
   description: z.string().min(1, "Description is required"),
   status: z.enum(["todo", "in-progress", "done"] as const, {
-    message: "Please select a status",
+    error: "Please select a status",
   }),
   dateRange: z
-    .any()
+    .tuple([z.string(), z.string()])
     .refine((val) => val && val.length === 2 && val[0] && val[1], {
       message: "Timeline is required",
     }),
-  attachments: z.array(z.any()).optional(),
+  attachments: z
+    .array(
+      z.union([
+        z.instanceof(File),
+        z.object({
+          name: z.string(),
+          size: z.number(),
+          type: z.string(),
+          url: z.string().optional(),
+        }),
+      ])
+    )
+    .optional(),
 });
 
 type TodoFormData = z.infer<typeof todoSchema>;
@@ -220,16 +232,15 @@ export default function TodoList(): JSX.Element {
 
     // Convert new files to TodoAttachment objects
     // Note: In a real app, you would upload files to a server here and get URLs back
-    // For this demo, we'll create object URLs for new files but note that
-    // this isn't persistent across reloads if not handled properly
+    // For this demo, we'll create object URLs for new files
+    // Object URLs are managed by the browser and will be cleaned up when:
+    // 1. The todo is deleted (handled in deleteTodo)
+    // 2. The page is refreshed/closed (automatic browser cleanup)
     const processedAttachments: TodoAttachment[] = [];
 
     if (data.attachments && Array.isArray(data.attachments)) {
       data.attachments.forEach((file: any) => {
-        // If it's already a TodoAttachment (from existing data), keep it
-        if (!file.lastModified && file.name && file.type && file.size) {
-          processedAttachments.push(file as TodoAttachment);
-        } else if (file instanceof File) {
+        if (file instanceof File) {
           // It's a new File object, convert it
           processedAttachments.push({
             name: file.name,
@@ -237,6 +248,9 @@ export default function TodoList(): JSX.Element {
             type: file.type,
             url: URL.createObjectURL(file), // Create temporary URL for preview
           });
+        } else if (file.name && file.type && file.size) {
+          // If it's already a TodoAttachment (from existing data), keep it
+          processedAttachments.push(file as TodoAttachment);
         }
       });
     }
@@ -317,7 +331,7 @@ export default function TodoList(): JSX.Element {
         name: editingTodo.name,
         description: editingTodo.description,
         status: editingTodo.status,
-        dateRange: [editingTodo.startDate, editingTodo.endDate],
+        dateRange: [editingTodo.startDate || "", editingTodo.endDate || ""],
         attachments: editingTodo.attachments,
       };
     }
@@ -370,7 +384,7 @@ export default function TodoList(): JSX.Element {
 
           {sortBy !== "none" && (
             <Button
-              onClick={() => dispatch(setSortBy(sortBy))}
+              onClick={() => dispatch(setSortBy(sortBy))} // Toggles direction when same sortBy is clicked (see todoSlice)
               title={
                 sortDirection === "asc"
                   ? "Ascending (click to reverse)"
