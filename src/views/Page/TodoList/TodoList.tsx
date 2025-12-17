@@ -183,7 +183,8 @@ export default function TodoList(): JSX.Element {
         });
       });
     };
-  }, [todos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run cleanup on unmount
 
   // Form fields configuration
   const formFields: FieldConfig[] = [
@@ -262,7 +263,7 @@ export default function TodoList(): JSX.Element {
     const processedAttachments: TodoAttachment[] = [];
 
     if (data.attachments && Array.isArray(data.attachments)) {
-      data.attachments.forEach((file: any) => {
+      data.attachments.forEach((file: File | TodoAttachment) => {
         if (file instanceof File) {
           // It's a new File object, convert it
           processedAttachments.push({
