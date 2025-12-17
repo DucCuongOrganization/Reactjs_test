@@ -40,7 +40,16 @@ const todoSchema = z.object({
     .tuple([z.string(), z.string()])
     .refine((val) => val && val.length === 2 && val[0] && val[1], {
       message: "Timeline is required",
-    }),
+    })
+    .refine(
+      (val) => {
+        const [start, end] = val;
+        return new Date(start) <= new Date(end);
+      },
+      {
+        message: "Start date must be before or equal to end date",
+      }
+    ),
   attachments: z
     .array(
       z.union([
