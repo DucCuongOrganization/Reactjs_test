@@ -163,6 +163,19 @@ export default function TodoList(): JSX.Element {
     };
   }, [todos, paginatedTodos, dispatch]);
 
+  // Cleanup all blob URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      todos.forEach((todo) => {
+        todo.attachments.forEach((att) => {
+          if (att.url?.startsWith("blob:")) {
+            URL.revokeObjectURL(att.url);
+          }
+        });
+      });
+    };
+  }, [todos]);
+
   // Form fields configuration
   const formFields: FieldConfig[] = [
     {
@@ -233,9 +246,10 @@ export default function TodoList(): JSX.Element {
     // Convert new files to TodoAttachment objects
     // Note: In a real app, you would upload files to a server here and get URLs back
     // For this demo, we'll create object URLs for new files
-    // Object URLs are managed by the browser and will be cleaned up when:
-    // 1. The todo is deleted (handled in deleteTodo)
-    // 2. The page is refreshed/closed (automatic browser cleanup)
+    // Object URLs are properly cleaned up to prevent memory leaks:
+    // 1. When a todo is updated (revoke old URLs before replacing)
+    // 2. When a todo is deleted (revoke URLs in deleteTodo)
+    // 3. When component unmounts (cleanup effect revokes all URLs)
     const processedAttachments: TodoAttachment[] = [];
 
     if (data.attachments && Array.isArray(data.attachments)) {
@@ -256,6 +270,13 @@ export default function TodoList(): JSX.Element {
     }
 
     if (editingTodo) {
+      // Revoke old attachment URLs before updating to prevent memory leaks
+      editingTodo.attachments.forEach((att) => {
+        if (att.url?.startsWith("blob:")) {
+          URL.revokeObjectURL(att.url);
+        }
+      });
+
       // Update existing todo
       dispatch(
         updateTodo({
@@ -287,6 +308,16 @@ export default function TodoList(): JSX.Element {
 
   // Delete todo
   const deleteTodo = (id: number) => {
+    // Find the todo and revoke its attachment URLs to prevent memory leaks
+    const todoToDelete = todos.find((todo) => todo.id === id);
+    if (todoToDelete) {
+      todoToDelete.attachments.forEach((att) => {
+        if (att.url?.startsWith("blob:")) {
+          URL.revokeObjectURL(att.url);
+        }
+      });
+    }
+
     dispatch(deleteTodoAction(id));
   };
 
