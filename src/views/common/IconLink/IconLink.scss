@@ -1,0 +1,45 @@
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+
+  &:hover {
+    color: #2563eb;
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  &:active {
+    color: #1d4ed8;
+    background-color: rgba(59, 130, 246, 0.15);
+  }
+
+  .icon-link-before,
+  .icon-link-after {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    font-size: 0.625rem; // 10px - very small icon
+  }
+
+  &:hover .icon-link-before {
+    transform: translateX(-2px);
+  }
+
+  &:hover .icon-link-after {
+    transform: translateX(2px);
+  }
+
+  .icon-link-text {
+    display: inline-flex;
+    align-items: center;
+  }
+}

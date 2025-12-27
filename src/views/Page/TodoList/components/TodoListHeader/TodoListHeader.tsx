@@ -1,0 +1,93 @@
+import { Button, Flex, Input, Select, Space } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
+import {
+  setSearchQuery,
+  setFilterStatus,
+  setSortBy,
+  SortOption,
+} from "../../../../../store/slices/todoSlice";
+
+const { Search } = Input;
+
+export const TodoListHeader: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+  const searchQuery = useAppSelector((state) => state.todos.searchQuery);
+  const filterStatus = useAppSelector((state) => state.todos.filterStatus);
+  const sortBy = useAppSelector((state) => state.todos.sortBy);
+  const sortDirection = useAppSelector((state) => state.todos.sortDirection);
+
+  return (
+    <Space
+      direction="vertical"
+      size="large"
+      style={{ width: "100%", marginBottom: "1.5rem" }}
+    >
+      {/* Title and Add Button */}
+      <Flex justify="space-between" align="center">
+        <h1 style={{ margin: 0, fontSize: "2rem", fontWeight: "bold" }}>
+          📝 Todo List
+        </h1>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          size="middle"
+          onClick={() => history.push("/todo-create")}
+        >
+          Add Task
+        </Button>
+      </Flex>
+
+      {/* Filter, Search, Sort Toolbar */}
+      <Flex gap="middle" wrap="wrap" align="center">
+        <Search
+          placeholder="Search tasks..."
+          value={searchQuery}
+          onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+          onSearch={(value) => dispatch(setSearchQuery(value))}
+          style={{ width: 300 }}
+          allowClear
+        />
+
+        <Select
+          value={filterStatus}
+          onChange={(value) => dispatch(setFilterStatus(value))}
+          style={{ width: 150 }}
+        >
+          <Select.Option value="all">All Status</Select.Option>
+          <Select.Option value="todo">To Do</Select.Option>
+          <Select.Option value="in-progress">In Progress</Select.Option>
+          <Select.Option value="done">Done</Select.Option>
+        </Select>
+
+        <Space.Compact>
+          <Select
+            value={sortBy}
+            onChange={(value: SortOption) => dispatch(setSortBy(value))}
+            style={{ width: 150 }}
+          >
+            <Select.Option value="none">No Sort</Select.Option>
+            <Select.Option value="name">Name</Select.Option>
+            <Select.Option value="date">Date</Select.Option>
+            <Select.Option value="status">Status</Select.Option>
+          </Select>
+
+          {sortBy !== "none" && (
+            <Button
+              onClick={() => dispatch(setSortBy(sortBy))}
+              title={
+                sortDirection === "asc"
+                  ? "Ascending (click to reverse)"
+                  : "Descending (click to reverse)"
+              }
+            >
+              {sortDirection === "asc" ? "↑" : "↓"}
+            </Button>
+          )}
+        </Space.Compact>
+      </Flex>
+    </Space>
+  );
+};

@@ -1,0 +1,163 @@
+.todo-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.not-found {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #6b7280;
+  }
+}
+
+.todo-detail-header {
+  margin-bottom: 2rem;
+
+  .todo-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .todo-detail-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin: 0;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .todo-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+  }
+
+  .todo-date {
+    display: flex;
+    align-items: center;
+    color: #6b7280;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    .icon {
+      margin-right: 4px;
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.todo-detail-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.todo-detail-info {
+  .info-section {
+    margin-bottom: 2rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+
+      &.section-title-with-icon {
+        .icon {
+          margin-right: 8px;
+          width: 18px;
+          height: 18px;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    p {
+      margin: 0;
+      color: #4b5563;
+    }
+
+    .description-text {
+      color: #4b5563;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .attachments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .attachment-item {
+      padding: 0.75rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .attachment-size {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+.todo-detail-actions {
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

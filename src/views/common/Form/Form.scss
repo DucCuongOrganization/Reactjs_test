@@ -1,0 +1,26 @@
+// Override Ant Design Form required asterisk position
+// Hide the default asterisk before label
+.ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  display: none !important;
+}
+
+// Add asterisk after label
+.ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::after {
+  display: inline-block !important;
+  margin-left: 4px !important;
+  color: #ff4d4f !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  content: "*" !important;
+}
+
+// Make all form labels bold
+.ant-form-item-label > label {
+  font-weight: 600 !important;
+}
