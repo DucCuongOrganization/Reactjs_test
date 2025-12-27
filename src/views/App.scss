@@ -1,9 +1,27 @@
-.App {
-  text-align: center;
+// App.scss - Minimal styles, most layout handled by Ant Design
+
+// Global font family
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
-.App-header {
-  background-color: #ffffff;
-  min-height: 100vh;
-  color: #1f2937;
+// Optional: Custom scrollbar for content area
+.ant-layout-content {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+
+    &:hover {
+      background: #555;
+    }
+  }
 }

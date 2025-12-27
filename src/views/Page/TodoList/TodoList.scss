@@ -1,63 +1,10 @@
 /* TodoList.scss */
 .todo-container {
-  width: 100%;
   margin: 0;
   padding: 2rem 3rem;
   background: white;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
-}
-
-.todo-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  gap: 1rem;
-}
-
-.todo-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin: 0;
-}
-
-.add-todo-btn {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: all 0.3s;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-.add-todo-btn:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
-}
-
-.add-todo-btn:active {
-  transform: translateY(0);
-}
-
-/* Toolbar for Filter, Search, Sort */
-.toolbar {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 8px;
-  flex-wrap: wrap;
 }
 
 .todo-list {
@@ -102,31 +49,10 @@
   background: #f0fdf4;
 }
 
-.drag-handle {
-  cursor: grab;
-  color: #4b5563; /* Darker gray for better visibility */
-  font-size: 1.25rem;
-  user-select: none;
-  transition: all 0.2s;
-  align-self: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid transparent; /* Prepare for border transition */
-}
-
-.drag-handle:hover {
-  color: #6b7280;
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-}
-
-.drag-handle:active {
-  cursor: grabbing;
-}
-
 .todo-content {
   flex: 1;
   min-width: 0;
+  overflow: hidden; // Prevent content from overflowing
 }
 
 .todo-main {
@@ -149,17 +75,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  overflow-wrap: anywhere; // Backup for very long strings
-}
-
-.todo-name.clickable {
-  cursor: pointer;
-  transition: color 0.2s;
-
-  &:hover {
-    color: #3b82f6;
-    text-decoration: underline;
-  }
+  word-break: break-all; // Break long words if needed
 }
 
 .todo-status {
@@ -257,16 +173,6 @@
 .delete-btn:hover {
   background: #fef2f2;
   transform: scale(1.1);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: #9ca3af;
-  font-size: 1.125rem;
-  background: #f9fafb;
-  border-radius: 8px;
-  border: 2px dashed #d1d5db;
 }
 
 /* Results count */
@@ -375,34 +281,6 @@
     height: 2rem;
     font-size: 1rem;
   }
-}
-
-.stats {
-  display: flex;
-  align-items: center; /* Center vertically */
-  gap: 1.5rem; /* Increase spacing between stats for better readability */
-  margin-bottom: 1rem;
-  padding: 0.5rem 0.25rem;
-  font-weight: 500;
-  color: #4b5563;
-  font-size: 1.2rem;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap; /* Prevent line wrapping */
-}
-
-.stat-label {
-  font-weight: 600;
-}
-
-.stat-value {
-  font-weight: 700;
-  color: #1f2937;
 }
 
 .pagination-container {
