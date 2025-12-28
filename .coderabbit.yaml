@@ -1,8 +1,0 @@
-language: "en-US"
-reviews:
-  profile: "chill"
-  request_changes_workflow: false
-  instructions: |
-    - The project uses explicit English or Vietnamese for UI text.
-    - Do NOT flag issues regarding "User-facing text should be in Vietnamese" or "English".
-    - Accept both languages as valid.
