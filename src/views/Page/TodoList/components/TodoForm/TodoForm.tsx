@@ -40,7 +40,17 @@ const todoSchema = z.object({
       }
     ),
   attachments: z
-    .any()
+    .union([
+      z.instanceof(FileList),
+      z.array(z.instanceof(File)),
+      z.array(
+        z.object({
+          id: z.number().optional(),
+          name: z.string(),
+          url: z.string().optional(),
+        })
+      ),
+    ])
     .optional()
     .transform((val) => {
       // Transform FileList to array
