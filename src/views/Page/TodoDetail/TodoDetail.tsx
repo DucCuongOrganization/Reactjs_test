@@ -52,12 +52,14 @@ export default function TodoDetail() {
     }
   }, [isCreateMode, dispatch]);
 
-  // Reset detail state when component unmounts
+  // Reset detail state and cleanup blob URLs when component unmounts
   useEffect(() => {
     return () => {
+      // Cleanup blob URLs if todo exists and has attachments
+      if (todo?.attachments) revokeBlobUrls(todo.attachments);
       dispatch(resetDetailState());
     };
-  }, [dispatch]);
+  }, [dispatch, todo]);
 
   if (!isCreateMode && !todo) {
     return (
@@ -98,6 +100,9 @@ export default function TodoDetail() {
               })
             );
             message.success("Task created successfully!");
+            // Cleanup temporary blob URLs after navigation
+            // Note: We don't revoke here because Redux now owns these URLs
+            // They will be cleaned up when the todo is deleted or updated
             history.push("/todo-list");
           } else {
             revokeBlobUrls(todo!.attachments);
@@ -128,6 +133,8 @@ export default function TodoDetail() {
   const handleDelete = () => {
     confirmDelete({
       onConfirm: () => {
+        // Cleanup blob URLs before deleting
+        if (todo?.attachments) revokeBlobUrls(todo.attachments);
         dispatch(deleteTodoAction(todo!.id));
         message.success("Task deleted successfully!");
         history.push("/todo-list");
