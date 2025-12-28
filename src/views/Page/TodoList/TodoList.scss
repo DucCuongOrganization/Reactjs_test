@@ -156,8 +156,8 @@
   font-size: $font-size-xl;
   border-radius: $border-radius-sm;
   transition: all $transition-fast;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: $btn-icon-size;
+  height: $btn-icon-size;
   @include flex-center;
 }
 
@@ -241,8 +241,8 @@
 
   .edit-btn,
   .delete-btn {
-    width: $spacing-2xl;
-    height: $spacing-2xl;
+    width: $btn-icon-size-mobile;
+    height: $btn-icon-size-mobile;
     font-size: $font-size-md;
   }
 }
