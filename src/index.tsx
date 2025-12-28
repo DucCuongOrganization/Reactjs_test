@@ -1,10 +1,15 @@
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./store/index";
 import "./styles/global.scss";
 import App from "./views/App";
+
+// Configure dayjs locale globally
+dayjs.locale("vi");
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
