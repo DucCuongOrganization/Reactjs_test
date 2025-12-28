@@ -64,6 +64,21 @@
   background: $bg;
 }
 
+// Apply status modifiers (DRY for todo items)
+@mixin apply-status-modifiers {
+  &.status-todo {
+    @include status-border($status-todo-border);
+  }
+
+  &.status-in-progress {
+    @include status-border($status-in-progress-border);
+  }
+
+  &.status-done {
+    @include status-border($status-done-border);
+  }
+}
+
 // Responsive breakpoints
 @mixin mobile {
   @media (max-width: 480px) {

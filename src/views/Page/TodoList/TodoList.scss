@@ -33,17 +33,7 @@
     @include card-shadow;
   }
 
-  &.status-todo {
-    @include status-border($status-todo-border);
-  }
-
-  &.status-in-progress {
-    @include status-border($status-in-progress-border);
-  }
-
-  &.status-done {
-    @include status-border($status-done-border);
-  }
+  @include apply-status-modifiers;
 }
 
 .todo-content {
@@ -147,18 +137,7 @@
     }
   }
 
-  // Status-based styling
-  &.status-todo {
-    @include status-border($status-todo-border);
-  }
-
-  &.status-in-progress {
-    @include status-border($status-in-progress-border);
-  }
-
-  &.status-done {
-    @include status-border($status-done-border);
-  }
+  @include apply-status-modifiers;
 }
 
 .todo-actions {
