@@ -72,6 +72,7 @@ export const TodoListHeader: React.FC = () => {
           {sortBy !== "none" && (
             <Button
               onClick={() => dispatch(setSortBy(sortBy))}
+              aria-label={sortDirection === "asc" ? "Sort ascending, click to reverse" : "Sort descending, click to reverse"}
               title={
                 sortDirection === "asc"
                   ? "Ascending (click to reverse)"
