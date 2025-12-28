@@ -1,4 +1,4 @@
-import { Empty, Pagination } from "antd";
+import { Card, Empty, List, Pagination, Space, Typography } from "antd";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as AttachmentIcon } from "../../../../../assets/svg/attachment.svg";
 import { ReactComponent as CalendarIcon } from "../../../../../assets/svg/calendar.svg";
@@ -10,7 +10,10 @@ import {
 } from "../../../../../store/slices/todoSlice";
 import { formatDate } from "../../../../../utils/dateUtils";
 import { getStatusLabel } from "../../../../../utils/statusUtils";
+import { StatusTag } from "../../../../common/StatusTag";
 import { isEmpty } from "lodash";
+
+const { Title, Text, Paragraph } = Typography;
 
 interface TodoListContentProps {
   filteredAndSortedTodos: Todo[];
@@ -26,22 +29,13 @@ export const TodoListContent: React.FC<TodoListContentProps> = ({
   const currentPage = useAppSelector((state) => state.todos.currentPage);
   const itemsPerPage = useAppSelector((state) => state.todos.itemsPerPage);
 
-  const getStatusClass = (status: string): string => {
-    return `status-${status}`;
-  };
-
   const handleTodoClick = (todoId: number) => {
     history.push(`/todo/${todoId}`);
   };
 
   // Early return for empty state
   if (isEmpty(filteredAndSortedTodos)) {
-    return (
-      <Empty
-        description="No tasks yet. Add a new task! 🎯"
-        style={{ marginTop: "3rem" }}
-      />
-    );
+    return <Empty description="No tasks yet. Add a new task! 🎯" />;
   }
 
   return (
@@ -52,54 +46,60 @@ export const TodoListContent: React.FC<TodoListContentProps> = ({
         {filteredAndSortedTodos.length === 1 ? "task" : "tasks"}
       </div>
 
-      {/* Todo Grid */}
-      <div className="todo-list">
-        {paginatedTodos.map((todo) => (
-          <div
-            key={todo.id}
-            className={`todo-item ${getStatusClass(todo.status)}`}
-            onClick={() => handleTodoClick(todo.id)}
-            style={{ cursor: "pointer" }}
-          >
-            {/* Todo content */}
-            <div className="todo-content">
-              <div className="todo-main">
-                <h3
-                  className="todo-name clickable"
-                  title="Click to view details"
+      {/* Todo Grid - 2 columns with 1rem gap */}
+      <List
+        grid={{ gutter: 16, column: 2 }}
+        dataSource={paginatedTodos}
+        renderItem={(todo) => (
+          <List.Item>
+            <Card
+              hoverable
+              onClick={() => handleTodoClick(todo.id)}
+              className={`todo-item-card status-${todo.status}`}
+            >
+              <Space direction="vertical" size="small" className="card-content">
+                {/* Title and Status */}
+                <div className="card-header">
+                  <Title level={4} className="todo-name" ellipsis>
+                    {todo.name}
+                  </Title>
+                  <StatusTag status={todo.status}>
+                    {getStatusLabel(todo.status)}
+                  </StatusTag>
+                </div>
+
+                {/* Description */}
+                <Paragraph
+                  ellipsis={{ rows: 2 }}
+                  className="todo-description"
+                  type="secondary"
                 >
-                  {todo.name}
-                </h3>
-                <span className={`todo-status ${getStatusClass(todo.status)}`}>
-                  {getStatusLabel(todo.status)}
-                </span>
-              </div>
-              <p className="todo-description">{todo.description}</p>
-              <div className="todo-dates">
-                {(todo.startDate || todo.endDate) && (
-                  <span className="todo-date">
-                    <CalendarIcon
-                      className="icon-calendar"
-                      style={{ marginRight: "4px" }}
-                    />{" "}
-                    {todo.startDate ? formatDate(todo.startDate) : "N/A"} -{" "}
-                    {todo.endDate ? formatDate(todo.endDate) : "N/A"}
-                  </span>
-                )}
-                {todo.attachments && todo.attachments.length > 0 && (
-                  <span className="todo-attachments">
-                    <AttachmentIcon
-                      className="icon-attachment"
-                      style={{ marginRight: "4px" }}
-                    />
-                    {todo.attachments.length} file(s)
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                  {todo.description}
+                </Paragraph>
+
+                {/* Metadata (Date & Attachments) */}
+                <Space size="large" className="todo-meta">
+                  {(todo.startDate || todo.endDate) && (
+                    <Text type="secondary" className="todo-date">
+                      <CalendarIcon className="icon-calendar" />
+                      {todo.startDate
+                        ? formatDate(todo.startDate)
+                        : "N/A"} -{" "}
+                      {todo.endDate ? formatDate(todo.endDate) : "N/A"}
+                    </Text>
+                  )}
+                  {todo.attachments && todo.attachments.length > 0 && (
+                    <Text type="secondary" className="todo-attachments">
+                      <AttachmentIcon className="icon-attachment" />
+                      {todo.attachments.length} file(s)
+                    </Text>
+                  )}
+                </Space>
+              </Space>
+            </Card>
+          </List.Item>
+        )}
+      />
 
       {/* Pagination */}
       {filteredAndSortedTodos.length > 0 && (
