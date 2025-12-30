@@ -177,9 +177,14 @@ function initTarotApp(container: HTMLDivElement, onReady: () => void) {
     );
     camera.position.set(0, 0, SCENE_CONFIG.camera.position.z);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // TỐI ƯU CẤP 4: Kiểm soát Pixel Ratio và Power Preference để tiết kiệm GPU
+    renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance", // Ưu tiên dùng GPU rời nếu có
+    });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Giới hạn tối đa là 2 để không quá tải
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
 
