@@ -1,15 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import { CardData, TarotTopic, TarotHistoryItem } from "../../types/tarot";
+import React, { useEffect, useRef } from "react";
+import { RootState } from "../../../store";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  clearAllHistory,
+  completeSelection,
+  resetGame,
+  setLoading,
+  setPickedCount,
+  setSelectedTopic,
+  setStep,
+  toggleHistory,
+} from "../../../store/slices/tarotSlice";
+import { TarotStep, TarotTopic } from "../../types/tarot";
+import "./TarotAR.scss";
 import { TarotSceneManager } from "./TarotScene";
-import { TopicOverlay } from "./components/TopicOverlay";
-import { ReadingUI } from "./components/ReadingUI";
-import { ResultModal } from "./components/ResultModal";
 import { HistoryModal } from "./components/HistoryModal";
 import { Loader } from "./components/Loader";
-import { getHistory, saveReading, clearHistory } from "./utils/historyManager";
-import "./TarotAR.scss";
+import { ReadingUI } from "./components/ReadingUI";
+import { ResultModal } from "./components/ResultModal";
+import { TopicOverlay } from "./components/TopicOverlay";
 
-// Load Google Fonts for premium look
+// Load Google Fonts
 const fontLink = document.createElement("link");
 fontLink.href =
   "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap";
@@ -20,20 +31,26 @@ const TarotAR: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneManager = useRef<TarotSceneManager | null>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [step, setStep] = useState<"TOPIC" | "PICKING" | "RESULT">("TOPIC");
-  const [selectedTopic, setSelectedTopic] = useState<TarotTopic | null>(null);
-  const [pickedCount, setPickedCount] = useState(0);
-  const [finalCards, setFinalCards] = useState<CardData[]>([]);
+  const dispatch = useAppDispatch();
+  const {
+    step,
+    selectedTopic,
+    pickedCount,
+    finalCards,
+    history,
+    showHistory,
+    isLoading,
+  } = useAppSelector((state: RootState) => state.tarot);
 
-  // History State
-  const [showHistory, setShowHistory] = useState(false);
-  const [history, setHistory] = useState<TarotHistoryItem[]>([]);
+  // Use a ref to keep track of selected topic for the closure in setupScene
+  const selectedTopicRef = useRef<TarotTopic | null>(null);
+
+  // Sync ref with redux state
+  useEffect(() => {
+    selectedTopicRef.current = selectedTopic;
+  }, [selectedTopic]);
 
   useEffect(() => {
-    // Load history on mount
-    setHistory(getHistory());
-
     const loadScript = (src: string): Promise<void> => {
       return new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${src}"]`)) return resolve();
@@ -59,16 +76,10 @@ const TarotAR: React.FC = () => {
 
         if (containerRef.current) {
           sceneManager.current = new TarotSceneManager(containerRef.current, {
-            onLoadingComplete: () => setIsLoading(false),
-            onCardPicked: (count) => setPickedCount(count),
+            onLoadingComplete: () => dispatch(setLoading(false)),
+            onCardPicked: (count) => dispatch(setPickedCount(count)),
             onSelectionComplete: (cards) => {
-              setFinalCards(cards);
-              setStep("RESULT");
-              // Save to History (check if we have a topic selected to be safe)
-              if (selectedTopicRef.current) {
-                const newItem = saveReading(selectedTopicRef.current, cards);
-                setHistory((prev) => [newItem, ...prev]);
-              }
+              dispatch(completeSelection(cards));
             },
           });
         }
@@ -82,33 +93,21 @@ const TarotAR: React.FC = () => {
     return () => {
       sceneManager.current?.cleanup();
     };
-  }, []);
-
-  // Use a Ref to access the latest selectedTopic inside the closure of onSelectionComplete
-  // or simply rely on the fact that selectedTopic state might be stale in the callback defined in useEffect.
-  // Actually, the closure inside useEffect might have stale state.
-  // Best to use a ref for selectedTopic to ensure the callback sees the current value.
-  const selectedTopicRef = useRef<TarotTopic | null>(null);
+  }, [dispatch]);
 
   const handleTopicSelect = (topic: TarotTopic) => {
-    setSelectedTopic(topic);
-    selectedTopicRef.current = topic;
-    setStep("PICKING");
+    dispatch(setSelectedTopic(topic));
+    dispatch(setStep(TarotStep.PICKING));
     sceneManager.current?.startGame();
   };
 
   const handleRestart = () => {
-    setStep("TOPIC");
-    setSelectedTopic(null);
-    selectedTopicRef.current = null;
-    setPickedCount(0);
-    setFinalCards([]);
+    dispatch(resetGame());
     sceneManager.current?.reset();
   };
 
   const handleClearHistory = () => {
-    clearHistory();
-    setHistory([]);
+    dispatch(clearAllHistory());
   };
 
   return (
@@ -118,12 +117,12 @@ const TarotAR: React.FC = () => {
 
       {/* UI Overlay Layer */}
       <div id="ui-layer">
-        {step === "TOPIC" && (
+        {step === TarotStep.TOPIC && (
           <>
             <TopicOverlay onSelect={handleTopicSelect} />
             <button
               className="history-toggle-btn"
-              onClick={() => setShowHistory(true)}
+              onClick={() => dispatch(toggleHistory(true))}
               title="Xem Lịch Sử"
             >
               📜
@@ -131,7 +130,7 @@ const TarotAR: React.FC = () => {
           </>
         )}
 
-        {step === "PICKING" && (
+        {step === TarotStep.PICKING && (
           <ReadingUI
             isVisible={true}
             selectedTopic={selectedTopic}
@@ -139,7 +138,7 @@ const TarotAR: React.FC = () => {
           />
         )}
 
-        {step === "RESULT" && (
+        {step === TarotStep.RESULT && (
           <ResultModal
             selectedTopic={selectedTopic}
             cards={finalCards}
@@ -150,7 +149,7 @@ const TarotAR: React.FC = () => {
 
       <HistoryModal
         isOpen={showHistory}
-        onClose={() => setShowHistory(false)}
+        onClose={() => dispatch(toggleHistory(false))}
         history={history}
         onClear={handleClearHistory}
       />

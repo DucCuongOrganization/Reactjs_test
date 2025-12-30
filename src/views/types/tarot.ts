@@ -36,3 +36,9 @@ export interface TarotHistoryItem {
   topic: TarotTopic;
   cards: CardData[];
 }
+
+export enum TarotStep {
+  TOPIC = "TOPIC",
+  PICKING = "PICKING",
+  RESULT = "RESULT",
+}
