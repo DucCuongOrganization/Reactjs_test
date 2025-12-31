@@ -50,8 +50,17 @@ export class TarotSceneManager {
   constructor(container: HTMLDivElement, callbacks: TarotSceneCallbacks) {
     this.container = container;
     this.callbacks = callbacks;
-    this.THREE = (window as any).THREE;
-    this.TWEEN = (window as any).TWEEN;
+
+    const win = window as any;
+    if (!win.THREE || !win.TWEEN) {
+      throw new Error(
+        "TarotSceneManager dependencies (THREE or TWEEN) are missing from the window object. " +
+          "Ensure Three.js and Tween.js scripts are loaded before initializing the scene."
+      );
+    }
+
+    this.THREE = win.THREE;
+    this.TWEEN = win.TWEEN;
 
     // Bind event handlers once
     this.onMouseDownBound = this.onMouseDown.bind(this);
