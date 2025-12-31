@@ -177,6 +177,7 @@ export class TarotSceneManager {
 
   private createCards() {
     this.cardGroup = new this.THREE.Group();
+    this.cardGroup.position.y = -1.5; // Move deck down to avoid UI overlap
     this.scene.add(this.cardGroup);
     const geo = new this.THREE.BoxGeometry(
       CONFIG.cardWidth,

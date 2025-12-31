@@ -1,4 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import { Button, Tooltip } from "antd";
+import {
+  HistoryOutlined,
+  SoundOutlined,
+  MutedOutlined,
+} from "@ant-design/icons";
 import { RootState } from "../../../store";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
@@ -6,6 +12,7 @@ import {
   completeSelection,
   resetGame,
   setLoading,
+  setMute,
   setPickedCount,
   setSelectedTopic,
   setStep,
@@ -19,6 +26,7 @@ import { Loader } from "./components/Loader";
 import { ReadingUI } from "./components/ReadingUI";
 import { ResultModal } from "./components/ResultModal";
 import { TopicOverlay } from "./components/TopicOverlay";
+import { soundManager } from "./utils/SoundManager";
 
 // Load Google Fonts
 const fontLink = document.createElement("link");
@@ -40,7 +48,18 @@ const TarotAR: React.FC = () => {
     history,
     showHistory,
     isLoading,
+    isMuted,
   } = useAppSelector((state: RootState) => state.tarot);
+
+  // Sync mute state with SoundManager
+  useEffect(() => {
+    soundManager.setMute(isMuted);
+  }, [isMuted]);
+
+  // Reset game state when component mounts (e.g., clicking the tab)
+  useEffect(() => {
+    dispatch(resetGame());
+  }, [dispatch]);
 
   // Use a ref to keep track of selected topic for the closure in setupScene
   const selectedTopicRef = useRef<TarotTopic | null>(null);
@@ -77,9 +96,13 @@ const TarotAR: React.FC = () => {
         if (containerRef.current) {
           sceneManager.current = new TarotSceneManager(containerRef.current, {
             onLoadingComplete: () => dispatch(setLoading(false)),
-            onCardPicked: (count) => dispatch(setPickedCount(count)),
+            onCardPicked: (count) => {
+              dispatch(setPickedCount(count));
+              soundManager.playSelectSound(); // SFX: Card Pick
+            },
             onSelectionComplete: (cards) => {
               dispatch(completeSelection(cards));
+              soundManager.playRevealSound(); // SFX: Reveal
             },
           });
         }
@@ -99,6 +122,9 @@ const TarotAR: React.FC = () => {
     dispatch(setSelectedTopic(topic));
     dispatch(setStep(TarotStep.PICKING));
     sceneManager.current?.startGame();
+
+    // Start Audio
+    soundManager.playSelectSound();
   };
 
   const handleRestart = () => {
@@ -110,6 +136,10 @@ const TarotAR: React.FC = () => {
     dispatch(clearAllHistory());
   };
 
+  const handleToggleMute = () => {
+    dispatch(setMute(!isMuted));
+  };
+
   return (
     <div className="tarot-container">
       {/* 3D Canvas Layer */}
@@ -117,16 +147,27 @@ const TarotAR: React.FC = () => {
 
       {/* UI Overlay Layer */}
       <div id="ui-layer">
+        {/* Sound Toggle Button */}
+        <Tooltip title={isMuted ? "Bật âm thanh" : "Tắt âm thanh"}>
+          <Button
+            className="sound-toggle-btn"
+            shape="circle"
+            icon={isMuted ? <MutedOutlined /> : <SoundOutlined />}
+            onClick={handleToggleMute}
+          />
+        </Tooltip>
+
         {step === TarotStep.TOPIC && (
           <>
             <TopicOverlay onSelect={handleTopicSelect} />
-            <button
-              className="history-toggle-btn"
-              onClick={() => dispatch(toggleHistory(true))}
-              title="Xem Lịch Sử"
-            >
-              📜
-            </button>
+            <Tooltip title="Xem Lịch Sử">
+              <Button
+                className="history-toggle-btn"
+                shape="circle"
+                icon={<HistoryOutlined />}
+                onClick={() => dispatch(toggleHistory(true))}
+              />
+            </Tooltip>
           </>
         )}
 

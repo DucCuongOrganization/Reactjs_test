@@ -18,6 +18,7 @@ interface TarotState {
   finalCards: CardData[];
   history: TarotHistoryItem[];
   showHistory: boolean;
+  isMuted: boolean;
   isLoading: boolean;
 }
 
@@ -28,6 +29,7 @@ const initialState: TarotState = {
   finalCards: [],
   history: getHistory(),
   showHistory: false,
+  isMuted: false,
   isLoading: true,
 };
 
@@ -60,6 +62,9 @@ export const tarotSlice = createSlice({
     toggleHistory: (state, action: PayloadAction<boolean>) => {
       state.showHistory = action.payload;
     },
+    setMute: (state, action: PayloadAction<boolean>) => {
+      state.isMuted = action.payload;
+    },
     resetGame: (state) => {
       state.step = TarotStep.TOPIC;
       state.selectedTopic = null;
@@ -83,6 +88,7 @@ export const {
   setFinalCards,
   completeSelection,
   toggleHistory,
+  setMute,
   resetGame,
   clearAllHistory,
   setLoading,
