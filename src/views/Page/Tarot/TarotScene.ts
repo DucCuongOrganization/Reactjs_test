@@ -206,8 +206,14 @@ export class TarotSceneManager {
       0.02
     );
 
+    // Load card back texture with error handling
     const backTex = this.textureLoader.load(
-      require("../../../assets/png/back.png")
+      require("../../../assets/png/back.png"),
+      undefined, // onLoad
+      undefined, // onProgress
+      (error) => {
+        console.error("Failed to load card back texture:", error);
+      }
     );
     const matEdge = new this.THREE.MeshStandardMaterial({
       color: 0xd4af37,
@@ -220,10 +226,27 @@ export class TarotSceneManager {
     });
 
     cardData.forEach((data: CardData, i: number) => {
-      const frontTex = this.textureLoader.load(data.url);
+      // Load card front texture with error handling and fallback
+      let frontTex: THREE_TYPES.Texture | null = null;
+      let hasLoadError = false;
+
+      frontTex = this.textureLoader.load(
+        data.url,
+        undefined, // onLoad
+        undefined, // onProgress
+        (error) => {
+          console.error(
+            `Failed to load texture for card "${data.name}" (${data.url}):`,
+            error
+          );
+          hasLoadError = true;
+        }
+      );
+
       const matFront = new this.THREE.MeshStandardMaterial({
         map: frontTex,
         transparent: true,
+        color: hasLoadError ? 0xff0000 : 0xffffff, // Red tint if load failed
       });
       const matBackUnique = matBack.clone() as THREE_TYPES.MeshStandardMaterial;
       matBackUnique.transparent = true;
