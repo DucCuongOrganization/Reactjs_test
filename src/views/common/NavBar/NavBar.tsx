@@ -49,7 +49,7 @@ export const NavBar: React.FC = () => {
   return (
     <div className="navbar-container">
       <div className="navbar-header">
-        <FaReact className="navbar-icon" />
+        {(FaReact as any)({ className: "navbar-icon" })}
         <span className="navbar-title">React Website</span>
       </div>
       <Menu
