@@ -1,8 +1,9 @@
+import "antd/dist/reset.css"; // Ant Design CSS
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import dayjs from "dayjs";
-import "dayjs/locale/vi";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./store/index";
 import "./styles/global.scss";

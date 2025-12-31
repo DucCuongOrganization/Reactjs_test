@@ -17,8 +17,9 @@ body {
 }
 
 .app-content {
+  position: relative;
   background: #f0f2f5;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 // Optional: Custom scrollbar for content area
