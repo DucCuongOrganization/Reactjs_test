@@ -1,4 +1,5 @@
 import { TarotHistoryItem, TarotTopic, CardData } from "../../../types/tarot";
+import { generateUUID } from "../../../../utils/uuid";
 
 const STORAGE_KEY = "tarot_reading_history";
 const MAX_HISTORY_ITEMS = 50; // Limit to last 50 readings
@@ -8,7 +9,7 @@ export const saveReading = (
   cards: CardData[]
 ): TarotHistoryItem => {
   const newItem: TarotHistoryItem = {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     timestamp: Date.now(),
     topic,
     cards,
