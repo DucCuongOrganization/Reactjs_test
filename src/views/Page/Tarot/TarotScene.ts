@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import * as THREE_TYPES from "three";
 import { CardData } from "../../types/tarot";
 import { TAROT_CONFIG as CONFIG, SCENE_CONFIG, TAROT_DATA } from "./constants";
@@ -102,8 +103,9 @@ export class TarotSceneManager {
     this.textureLoader.setCrossOrigin("anonymous");
     this.particleTexture = this.generateParticleTexture();
 
-    this.shuffleArray(TAROT_DATA);
-    this.createCards();
+    const shuffledCards = cloneDeep(TAROT_DATA);
+    this.shuffleArray(shuffledCards);
+    this.createCards(shuffledCards);
     this.createBackgroundStars();
 
     this.raycaster = new this.THREE.Raycaster();
@@ -175,7 +177,7 @@ export class TarotSceneManager {
     this.scene.add(this.starFieldMesh);
   }
 
-  private createCards() {
+  private createCards(cardData: CardData[]) {
     this.cardGroup = new this.THREE.Group();
     this.cardGroup.position.y = -1.5; // Move deck down to avoid UI overlap
     this.scene.add(this.cardGroup);
@@ -198,7 +200,7 @@ export class TarotSceneManager {
       color: 0xffffff,
     });
 
-    TAROT_DATA.forEach((data: CardData, i: number) => {
+    cardData.forEach((data: CardData, i: number) => {
       const frontTex = this.textureLoader.load(data.url);
       const matFront = new this.THREE.MeshStandardMaterial({
         map: frontTex,
@@ -221,7 +223,7 @@ export class TarotSceneManager {
       card.renderOrder = 0; // Deck level
 
       const layout = CONFIG.spreadLayout!;
-      const totalRows = Math.ceil(TAROT_DATA.length / layout.cardsPerRow);
+      const totalRows = Math.ceil(cardData.length / layout.cardsPerRow);
       const row = Math.floor(i / layout.cardsPerRow);
       const col = i % layout.cardsPerRow;
       const totalWidth = (layout.cardsPerRow - 1) * layout.cardSpacing;
