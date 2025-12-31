@@ -9,7 +9,6 @@ export const saveReading = (
 ): TarotHistoryItem => {
   const newItem: TarotHistoryItem = {
     id: crypto.randomUUID(),
-    date: new Date().toISOString(),
     timestamp: Date.now(),
     topic,
     cards,
@@ -34,7 +33,21 @@ export const getHistory = (): TarotHistoryItem[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const items = JSON.parse(raw);
+
+    // Migration: Convert old items with 'date' property to timestamp-only format
+    return items.map((item: any) => {
+      // If item has 'date' but no 'timestamp', convert date to timestamp
+      if (item.date && !item.timestamp) {
+        return {
+          ...item,
+          timestamp: new Date(item.date).getTime(),
+        };
+      }
+      // Remove 'date' property if it exists (for items that have both)
+      const { date, ...rest } = item;
+      return rest as TarotHistoryItem;
+    });
   } catch (error) {
     console.error("Failed to load tarot history:", error);
     return [];
