@@ -23,9 +23,9 @@ export const ResultModal: React.FC<ResultModalProps> = ({
   const [isSharing, setIsSharing] = useState(false);
 
   const handleCopyImage = async () => {
-    setIsSharing(true);
     const element = document.getElementById("result-modal");
     if (!element) return;
+    setIsSharing(true);
 
     try {
       const blob = await toBlob(element, {
