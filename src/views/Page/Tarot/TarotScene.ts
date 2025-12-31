@@ -46,6 +46,7 @@ export class TarotSceneManager {
   private onMouseDownBound: (event: MouseEvent) => void;
   private onMouseMoveBound: (event: MouseEvent) => void;
   private onResizeBound: () => void;
+  private animateBound: (time: number) => void;
 
   constructor(container: HTMLDivElement, callbacks: TarotSceneCallbacks) {
     this.container = container;
@@ -66,9 +67,10 @@ export class TarotSceneManager {
     this.onMouseDownBound = this.onMouseDown.bind(this);
     this.onMouseMoveBound = this.onMouseMove.bind(this);
     this.onResizeBound = this.onResize.bind(this);
+    this.animateBound = this.animate.bind(this);
 
     this.init();
-    this.animate(0);
+    this.animateBound(0);
   }
 
   private init() {
@@ -625,7 +627,7 @@ export class TarotSceneManager {
 
   private animate(time: number) {
     if (this.isDisposed) return;
-    this.animationId = requestAnimationFrame(this.animate.bind(this));
+    this.animationId = requestAnimationFrame(this.animateBound);
     this.TWEEN.update(time);
     this.updateExplosions();
 
