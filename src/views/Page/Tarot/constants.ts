@@ -518,7 +518,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Nine of Wands",
-    url: require("../../../assets/png/tarot/00_fool.jpg"),
+    url: require("../../../assets/png/tarot/wands_09.jpg"),
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ trải qua nhiều sóng gió, cần kiên trì để giữ gìn hạnh phúc.",
@@ -532,7 +532,7 @@ export const TAROT_DATA: CardData[] = [
       "gia-dinh":
         "Cố gắng giữ gìn hòa khí gia đình dù có nhiều áp lực bên ngoài.",
     },
-  }, // Placeholder
+  },
   {
     name: "Ten of Wands",
     url: require("../../../assets/png/tarot/wands_10.jpg"),
@@ -567,7 +567,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Knight of Wands",
-    url: require("../../../assets/png/tarot/00_fool.jpg"),
+    url: require("../../../assets/png/tarot/wands_12.jpg"),
     topicMeanings: {
       "tinh-duyen":
         "Người yêu nhiệt huyết, nồng cháy nhưng hay thay đổi. Cuộc tình phiêu lưu.",
@@ -580,7 +580,7 @@ export const TAROT_DATA: CardData[] = [
         "Dễ bị chấn thương thể thao hoặc kiệt sức do hoạt động quá mức.",
       "gia-dinh": "Chuyến đi xa bất ngờ hoặc việc chuyển nhà gấp gáp.",
     },
-  }, // Placeholder
+  },
   {
     name: "Queen of Wands",
     url: require("../../../assets/png/tarot/wands_13.jpg"),
@@ -1206,7 +1206,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Ten of Pentacles",
-    url: require("../../../assets/png/tarot/00_fool.jpg"),
+    url: require("../../../assets/png/tarot/pentacles_10.jpg"),
     topicMeanings: {
       "tinh-duyen":
         "Hôn nhân bền vững, gia đình môn đăng hộ đối. Cuộc sống viên mãn.",
@@ -1219,7 +1219,7 @@ export const TAROT_DATA: CardData[] = [
       "gia-dinh":
         "Đại gia đình sum họp, sung túc. Ông bà cha mẹ con cháu quây quần.",
     },
-  }, // Placeholder
+  },
   {
     name: "Page of Pentacles",
     url: require("../../../assets/png/tarot/pentacles_11.jpg"),
