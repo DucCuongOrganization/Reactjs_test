@@ -1,3 +1,4 @@
+import backCardImage from "../../../assets/png/back.png";
 import { cloneDeep } from "lodash";
 import * as THREE_TYPES from "three";
 import { CardData } from "../../types/tarot";
@@ -210,7 +211,7 @@ export class TarotSceneManager {
 
     // Load card back texture with error handling
     const backTex = this.textureLoader.load(
-      require("../../../assets/png/back.png"),
+      backCardImage,
       undefined, // onLoad
       undefined, // onProgress
       (error) => {
