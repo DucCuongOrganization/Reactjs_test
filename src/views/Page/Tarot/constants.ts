@@ -1,10 +1,9 @@
 import { CardData, TarotConfig, TarotTopic } from "../../types/tarot";
 
 export const TAROT_DATA: CardData[] = [
-  // Major Arcana (0-21)
   {
     name: "The Fool",
-    url: require("../../../assets/png/tarot/00_fool.jpg"),
+    url: new URL("../../../assets/png/tarot/00_fool.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Một khởi đầu mới đầy lãng mạn, sự ngây thơ và tin tưởng tuyệt đối. Bạn có thể sắp bước vào một mối quan hệ bất ngờ.",
@@ -22,7 +21,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Magician",
-    url: require("../../../assets/png/tarot/01_magician.jpg"),
+    url: new URL("../../../assets/png/tarot/01_magician.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Bạn có đầy đủ sức hút và khả năng để chinh phục đối phương. Hãy chủ động tạo ra phép màu trong tình yêu.",
@@ -40,7 +40,10 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The High Priestess",
-    url: require("../../../assets/png/tarot/02_high_priestess.jpg"),
+    url: new URL(
+      "../../../assets/png/tarot/02_high_priestess.jpg",
+      import.meta.url
+    ).href,
     topicMeanings: {
       "tinh-duyen":
         "Một mối quan hệ tâm giao, sâu sắc nhưng kín đáo. Hãy lắng nghe trực giác và chờ đợi tín hiệu từ trái tim.",
@@ -58,7 +61,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Empress",
-    url: require("../../../assets/png/tarot/03_empress.jpg"),
+    url: new URL("../../../assets/png/tarot/03_empress.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Sự viên mãn, hạnh phúc và đam mê. Mối quan hệ đầy sự quan tâm, chăm sóc, có thể tiến tới hôn nhân.",
@@ -76,7 +80,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Emperor",
-    url: require("../../../assets/png/tarot/04_emperor.jpg"),
+    url: new URL("../../../assets/png/tarot/04_emperor.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ bền vững, có cam kết nhưng hơi khô khan. Đối phương là người đáng tin cậy, che chở.",
@@ -94,7 +99,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Hierophant",
-    url: require("../../../assets/png/tarot/05_hierophant.jpg"),
+    url: new URL("../../../assets/png/tarot/05_hierophant.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ truyền thống, nghiêm túc, có thể dẫn tới hôn nhân hoặc cam kết lâu dài.",
@@ -112,7 +118,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Lovers",
-    url: require("../../../assets/png/tarot/06_lovers.jpg"),
+    url: new URL("../../../assets/png/tarot/06_lovers.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu lãng mạn, sự hòa hợp tâm hồn. Đứng trước lựa chọn quan trọng trong tình cảm.",
@@ -130,7 +137,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Chariot",
-    url: require("../../../assets/png/tarot/07_chariot.jpg"),
+    url: new URL("../../../assets/png/tarot/07_chariot.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chinh phục người mình yêu, vượt qua rào cản. Mối quan hệ tiến triển nhanh chóng.",
@@ -148,7 +156,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Strength",
-    url: require("../../../assets/png/tarot/08_strength.jpg"),
+    url: new URL("../../../assets/png/tarot/08_strength.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ bền vững dựa trên sự thấu hiểu và nhẫn nại. Vượt qua thử thách cùng nhau.",
@@ -165,7 +174,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Hermit",
-    url: require("../../../assets/png/tarot/09_hermit.jpg"),
+    url: new URL("../../../assets/png/tarot/09_hermit.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Giai đoạn cần ở một mình để suy ngẫm về tình cảm. Tình yêu chín chắn, không ồn ào.",
@@ -183,7 +193,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Wheel of Fortune",
-    url: require("../../../assets/png/tarot/10_wheel.jpg"),
+    url: new URL("../../../assets/png/tarot/10_wheel.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Bước ngoặt trong tình cảm, định mệnh sắp đặt. Cuộc gặp gỡ tình cờ nhưng quan trọng.",
@@ -201,7 +212,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Justice",
-    url: require("../../../assets/png/tarot/11_justice.jpg"),
+    url: new URL("../../../assets/png/tarot/11_justice.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu cần sự công bằng, tôn trọng lẫn nhau. Giải quyết mâu thuẫn bằng lý trí.",
@@ -219,7 +231,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Hanged Man",
-    url: require("../../../assets/png/tarot/12_hanged_man.jpg"),
+    url: new URL("../../../assets/png/tarot/12_hanged_man.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         'Tạm dừng yêu đương để chữa lành bản thân. Mối quan hệ "đóng băng" tạm thời.',
@@ -234,7 +247,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Death",
-    url: require("../../../assets/png/tarot/13_death.jpg"),
+    url: new URL("../../../assets/png/tarot/13_death.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Kết thúc một mối quan hệ không còn phù hợp hoặc thay đổi hoàn toàn cách yêu.",
@@ -252,7 +266,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Temperance",
-    url: require("../../../assets/png/tarot/14_temperance.jpg"),
+    url: new URL("../../../assets/png/tarot/14_temperance.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tình cảm hài hòa, êm đềm. Hai bên biết lắng nghe và dung hòa sự khác biệt.",
@@ -269,7 +284,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Devil",
-    url: require("../../../assets/png/tarot/15_devil.jpg"),
+    url: new URL("../../../assets/png/tarot/15_devil.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ độc hại, phụ thuộc hoặc quá thiên về dục vọng. Cần thoát ra.",
@@ -287,7 +303,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Tower",
-    url: require("../../../assets/png/tarot/16_tower.jpg"),
+    url: new URL("../../../assets/png/tarot/16_tower.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chia tay đột ngột, cú sốc tình cảm, sự thật phơi bày gây đổ vỡ.",
@@ -302,7 +319,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Star",
-    url: require("../../../assets/png/tarot/17_star.jpg"),
+    url: new URL("../../../assets/png/tarot/17_star.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu lãng mạn, chữa lành vết thương cũ. Hy vọng vào tương lai tươi sáng.",
@@ -316,7 +333,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Moon",
-    url: require("../../../assets/png/tarot/18_moon.jpg"),
+    url: new URL("../../../assets/png/tarot/18_moon.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Sự lừa dối, mơ hồ hoặc lo lắng trong tình cảm. Cẩn thận với những hiểu lầm.",
@@ -333,7 +350,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The Sun",
-    url: require("../../../assets/png/tarot/19_sun.jpg"),
+    url: new URL("../../../assets/png/tarot/19_sun.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu lãng mạn, chữa lành vết thương cũ. Hy vọng vào tương lai tươi sáng.",
@@ -347,7 +364,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Judgement",
-    url: require("../../../assets/png/tarot/20_judgement.jpg"),
+    url: new URL("../../../assets/png/tarot/20_judgement.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Sự tha thứ, làm mới lại mối quan hệ hoặc quyết định dứt khoát để tìm hạnh phúc mới.",
@@ -364,7 +382,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "The World",
-    url: require("../../../assets/png/tarot/21_world.jpg"),
+    url: new URL("../../../assets/png/tarot/21_world.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen": "Tình yêu viên mãn, cái kết có hậu. Hạnh phúc trọn vẹn.",
       "cong-viec":
@@ -382,7 +401,8 @@ export const TAROT_DATA: CardData[] = [
   // Wands
   {
     name: "Ace of Wands",
-    url: require("../../../assets/png/tarot/wands_01.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_01.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Một khởi đầu lãng mạn đầy đam mê và nhiệt huyết. Có thể gặp tiếng sét ái tình.",
@@ -399,7 +419,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Two of Wands",
-    url: require("../../../assets/png/tarot/wands_02.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_02.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Đứng trước lựa chọn giữa hai người hoặc hai hướng đi trong tình cảm. Cần quyết định.",
@@ -416,7 +437,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Three of Wands",
-    url: require("../../../assets/png/tarot/wands_03.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_03.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chờ đợi người yêu ở xa hoặc mong chờ một bước tiến mới trong mối quan hệ.",
@@ -433,7 +455,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Four of Wands",
-    url: require("../../../assets/png/tarot/wands_04.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_04.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Đám cưới, tiệc đính hôn hoặc giai đoạn trăng mật ngọt ngào. Hạnh phúc viên mãn.",
@@ -451,7 +474,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Five of Wands",
-    url: require("../../../assets/png/tarot/wands_05.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_05.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mâu thuẫn nhỏ, tranh cãi vụn vặt nhưng không quá nghiêm trọng. Cần nhường nhịn.",
@@ -469,7 +493,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Six of Wands",
-    url: require("../../../assets/png/tarot/wands_06.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_06.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chinh phục được người trong mộng. Được mọi người ủng hộ mối quan hệ.",
@@ -484,7 +509,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Seven of Wands",
-    url: require("../../../assets/png/tarot/wands_07.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_07.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Bảo vệ tình yêu trước sự ngăn cản của người khác. Cần kiên định.",
@@ -502,7 +528,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Eight of Wands",
-    url: require("../../../assets/png/tarot/wands_08.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_08.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu sét đánh hoặc mối quan hệ tiến triển cực nhanh. Tin nhắn tình cảm tới tấp.",
@@ -518,7 +545,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Nine of Wands",
-    url: require("../../../assets/png/tarot/wands_09.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_09.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ trải qua nhiều sóng gió, cần kiên trì để giữ gìn hạnh phúc.",
@@ -535,7 +563,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Ten of Wands",
-    url: require("../../../assets/png/tarot/wands_10.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_10.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Cảm thấy nặng nề, áp lực trong mối quan hệ. Ôm đồm quá nhiều trách nhiệm.",
@@ -551,7 +580,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Page of Wands",
-    url: require("../../../assets/png/tarot/wands_11.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_11.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tin nhắn tán tỉnh, khởi đầu lãng mạn nhẹ nhàng. Tình yêu trẻ con, vui vẻ.",
@@ -567,7 +597,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Knight of Wands",
-    url: require("../../../assets/png/tarot/wands_12.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_12.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người yêu nhiệt huyết, nồng cháy nhưng hay thay đổi. Cuộc tình phiêu lưu.",
@@ -583,7 +614,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Queen of Wands",
-    url: require("../../../assets/png/tarot/wands_13.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_13.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người phụ nữ quyến rũ, độc lập và thu hút. Mối quan hệ nồng nhiệt.",
@@ -598,7 +630,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "King of Wands",
-    url: require("../../../assets/png/tarot/wands_14.jpg"),
+    url: new URL("../../../assets/png/tarot/wands_14.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người đàn ông trưởng thành, quyến rũ và chủ động. Mối quan hệ bền vững, đam mê.",
@@ -617,7 +650,7 @@ export const TAROT_DATA: CardData[] = [
   // Cups
   {
     name: "Ace of Cups",
-    url: require("../../../assets/png/tarot/cups_01.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_01.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Bắt đầu một tình yêu mới đẹp như mơ. Cảm xúc thăng hoa, hạnh phúc tràn đầy.",
@@ -635,7 +668,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Two of Cups",
-    url: require("../../../assets/png/tarot/cups_02.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_02.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Tình yêu đôi lứa hạnh phúc, sự thấu hiểu và gắn kết sâu sắc. Có thể đính hôn.",
@@ -650,7 +683,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Three of Cups",
-    url: require("../../../assets/png/tarot/cups_03.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_03.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ vui vẻ, được bạn bè ủng hộ. Có thể gặp người yêu qua các buổi tiệc.",
@@ -665,7 +698,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Four of Cups",
-    url: require("../../../assets/png/tarot/cups_04.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_04.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Cảm thấy nhàm chán trong mối quan hệ hoặc từ chối lời tỏ tình. Cần làm mới cảm xúc.",
@@ -681,7 +714,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Five of Cups",
-    url: require("../../../assets/png/tarot/cups_05.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_05.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Đau khổ vì tình cũ tan vỡ, thất vọng. Cần buông bỏ quá khứ để đón nhận cái mới.",
@@ -699,7 +732,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Six of Cups",
-    url: require("../../../assets/png/tarot/cups_06.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_06.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Gặp lại người yêu cũ hoặc hồi tưởng kỷ niệm đẹp. Mối quan hệ trong sáng, ngây thơ.",
@@ -715,7 +748,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Seven of Cups",
-    url: require("../../../assets/png/tarot/cups_07.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_07.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Có nhiều đối tượng theo đuổi nhưng chưa biết chọn ai. Cẩn thận tình yêu ảo ảnh.",
@@ -732,7 +765,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Eight of Cups",
-    url: require("../../../assets/png/tarot/cups_08.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_08.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Chủ động rời bỏ một mối quan hệ nhạt nhẽo để tìm kiếm ý nghĩa thực sự.",
@@ -748,7 +781,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Nine of Cups",
-    url: require("../../../assets/png/tarot/cups_09.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_09.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Hài lòng với cuộc sống độc thân hoặc mối quan hệ hiện tại. Hạnh phúc tự thân.",
@@ -763,7 +796,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Ten of Cups",
-    url: require("../../../assets/png/tarot/cups_10.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_10.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Hôn nhân hạnh phúc, gia đình êm ấm. Tình yêu bền vững trọn đời.",
@@ -778,7 +811,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Page of Cups",
-    url: require("../../../assets/png/tarot/cups_11.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_11.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Nhận được lời tỏ tình dễ thương hoặc tin nhắn lãng mạn. Tình yêu chớm nở.",
@@ -794,7 +827,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Knight of Cups",
-    url: require("../../../assets/png/tarot/cups_12.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_12.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Người yêu lãng mạn, ga lăng đang đến. Lời cầu hôn hoặc tỏ tình đầy chất thơ.",
@@ -809,7 +842,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Queen of Cups",
-    url: require("../../../assets/png/tarot/cups_13.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_13.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Người phụ nữ dịu dàng, thấu hiểu và biết lắng nghe. Tình yêu sâu sắc, bao dung.",
@@ -825,7 +858,7 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "King of Cups",
-    url: require("../../../assets/png/tarot/cups_14.jpg"),
+    url: new URL("../../../assets/png/tarot/cups_14.jpg", import.meta.url).href,
     topicMeanings: {
       "tinh-duyen":
         "Người đàn ông trưởng thành, tình cảm nhưng điềm đạm. Chỗ dựa vững chắc.",
@@ -843,7 +876,8 @@ export const TAROT_DATA: CardData[] = [
   // Swords
   {
     name: "Ace of Swords",
-    url: require("../../../assets/png/tarot/swords_01.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_01.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Một khởi đầu mới dựa trên sự giao tiếp rõ ràng và chân thật. Giải quyết dứt điểm mâu thuẫn cũ.",
@@ -860,7 +894,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Two of Swords",
-    url: require("../../../assets/png/tarot/swords_02.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_02.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Lưỡng lự giữa hai người hoặc giằng co nội tâm. Cố tình lảng tránh vấn đề.",
@@ -876,7 +911,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Three of Swords",
-    url: require("../../../assets/png/tarot/swords_03.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_03.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chia tay, ly thân hoặc bị phản bội. Nỗi đau lớn nhưng cần đối mặt để chữa lành.",
@@ -892,7 +928,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Four of Swords",
-    url: require("../../../assets/png/tarot/swords_04.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_04.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         'Tạm dừng yêu đương để chữa lành bản thân. Mối quan hệ "đóng băng" tạm thời.',
@@ -907,7 +944,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Five of Swords",
-    url: require("../../../assets/png/tarot/swords_05.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_05.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Cảm giác thua cuộc trong tình yêu, bị từ chối phũ phàng. Cần rút lui.",
@@ -923,7 +961,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Six of Swords",
-    url: require("../../../assets/png/tarot/swords_06.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_06.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Rời bỏ một mối quan hệ buồn đau để tìm bình yên. Chuyến đi xa cùng người yêu.",
@@ -940,7 +979,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Seven of Swords",
-    url: require("../../../assets/png/tarot/swords_07.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_07.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Có sự che giấu, không thành thật trong mối quan hệ. Cẩn thận người thứ ba.",
@@ -956,7 +996,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Eight of Swords",
-    url: require("../../../assets/png/tarot/swords_08.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_08.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Cảm thấy bị trói buộc trong mối quan hệ, không dám nói lên tiếng nói của mình.",
@@ -971,7 +1012,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Nine of Swords",
-    url: require("../../../assets/png/tarot/swords_09.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_09.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mất ngủ vì lo lắng cho mối quan hệ. Ghen tuông mù quáng hoặc hối hận.",
@@ -985,7 +1027,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Ten of Swords",
-    url: require("../../../assets/png/tarot/swords_10.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_10.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chia tay đau đớn, bị 'cắm sừng' công khai. Chấm dứt hoàn toàn.",
@@ -1000,7 +1043,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Page of Swords",
-    url: require("../../../assets/png/tarot/swords_11.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_11.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Thích tranh luận, phân tích đối phương. Mối quan hệ dựa trên sự thông minh, hóm hỉnh.",
@@ -1015,7 +1059,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Knight of Swords",
-    url: require("../../../assets/png/tarot/swords_12.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_12.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Tiến tới nhanh chóng, thẳng thắn nhưng thiếu lãng mạn. Dễ gây tổn thương.",
@@ -1030,7 +1075,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Queen of Swords",
-    url: require("../../../assets/png/tarot/swords_13.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_13.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Độc lập, lạnh lùng và kén chọn. Cần người thông minh tương xứng.",
@@ -1045,7 +1091,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "King of Swords",
-    url: require("../../../assets/png/tarot/swords_14.jpg"),
+    url: new URL("../../../assets/png/tarot/swords_14.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người đàn ông lý trí, ít thể hiện cảm xúc. Mối quan hệ dựa trên sự tôn trọng.",
@@ -1064,7 +1111,8 @@ export const TAROT_DATA: CardData[] = [
   // Pentacles
   {
     name: "Ace of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_01.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_01.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ bền vững, mang lại cảm giác an toàn. Có thể nhận được quà tặng giá trị.",
@@ -1082,7 +1130,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Two of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_02.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_02.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Cố gắng cân bằng giữa tình yêu và công việc. Mối quan hệ vui vẻ nhưng chưa ổn định.",
@@ -1097,7 +1146,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Three of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_03.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_03.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Xây dựng mối quan hệ dựa trên sự tôn trọng và hỗ trợ lẫn nhau. Cùng nhau phấn đấu.",
@@ -1113,7 +1163,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Four of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_04.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_04.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Chiếm hữu, kiểm soát người yêu quá mức. Sợ bị tổn thương nên khép lòng.",
@@ -1130,7 +1181,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Five of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_05.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_05.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Cảm thấy bị bỏ rơi, lạnh lẽo trong mối quan hệ. Khó khăn tài chính ảnh hưởng tình cảm.",
@@ -1145,7 +1197,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Six of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_06.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_06.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ có sự cho đi nhận lại công bằng. Được người yêu chiều chuộng, tặng quà.",
@@ -1161,7 +1214,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Seven of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_07.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_07.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Kiên nhẫn chờ đợi tình yêu đơm hoa kết trái. Đánh giá lại mối quan hệ lâu dài.",
@@ -1177,7 +1231,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Eight of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_08.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_08.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Nỗ lực vun đắp mối quan hệ từng chút một. Tình yêu bền vững nhờ sự cố gắng.",
@@ -1192,7 +1247,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Nine of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_09.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_09.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Hạnh phúc với cuộc sống độc thân sang chảnh. Tình yêu đẳng cấp, không phụ thuộc.",
@@ -1206,7 +1262,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Ten of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_10.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_10.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Hôn nhân bền vững, gia đình môn đăng hộ đối. Cuộc sống viên mãn.",
@@ -1222,7 +1279,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Page of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_11.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_11.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Mối quan hệ thực tế, nghiêm túc. Cùng nhau xây dựng tương lai.",
@@ -1236,7 +1294,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Knight of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_12.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_12.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người yêu chung thủy, đáng tin cậy nhưng hơi khô khan. Mối quan hệ tiến triển chậm mà chắc.",
@@ -1251,7 +1310,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "Queen of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_13.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_13.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người phụ nữ đảm đang, biết chăm lo. Tình yêu gắn liền với trách nhiệm và sự chăm sóc.",
@@ -1266,7 +1326,8 @@ export const TAROT_DATA: CardData[] = [
   },
   {
     name: "King of Pentacles",
-    url: require("../../../assets/png/tarot/pentacles_14.jpg"),
+    url: new URL("../../../assets/png/tarot/pentacles_14.jpg", import.meta.url)
+      .href,
     topicMeanings: {
       "tinh-duyen":
         "Người đàn ông thành đạt, bao bọc che chở. Mối quan hệ vững chắc như bàn thạch.",

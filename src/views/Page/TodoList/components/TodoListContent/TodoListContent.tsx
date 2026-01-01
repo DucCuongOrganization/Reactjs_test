@@ -1,7 +1,7 @@
 import { Card, Col, Empty, Flex, Pagination, Row, Typography } from "antd";
 import { useHistory } from "react-router-dom";
-import { ReactComponent as AttachmentIcon } from "../../../../../assets/svg/attachment.svg";
-import { ReactComponent as CalendarIcon } from "../../../../../assets/svg/calendar.svg";
+import AttachmentIcon from "../../../../../assets/svg/attachment.svg?react";
+import CalendarIcon from "../../../../../assets/svg/calendar.svg?react";
 import { useAppDispatch, useAppSelector } from "../../../../../store/hooks";
 import {
   setCurrentPage,

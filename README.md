@@ -8,16 +8,19 @@ Dự án nghiên cứu và thực hành ReactJS, bao gồm các tính năng chí
 ## Công nghệ sử dụng
 
 - **Core**: React 18, TypeScript 5
+- **Build Tool**: Vite
 - **State Management**: Redux Toolkit
 - **3D Engine**: Three.js (CDN), Tween.js (CDN)
-- **Styling**: SCSS, Ant Design Icons
+- **Styling**: SCSS, Ant Design
+- **Icon**: Ant Design Icons
 
 ## Lệnh cơ bản
 
-- `yarn start`: Chạy ứng dụng ở chế độ development.
-- `yarn build`: Đóng gói ứng dụng cho production.
+- `yarn dev`: Chạy ứng dụng ở chế độ development (Vite).
+- `yarn build`: Kiểm tra lỗi TypeScript và đóng gói ứng dụng (Production).
+- `yarn preview`: Xem trước bản build production tại local.
 - `yarn install`: Cài đặt toàn bộ dependencies.
 
 ---
 
-_Lưu ý: Luôn sử dụng **Yarn** để quản lý package._
+_Lưu ý: Dự án đã được migrate sang **Vite**. Luôn sử dụng **Yarn** để quản lý package._

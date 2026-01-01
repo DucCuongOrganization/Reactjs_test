@@ -46,7 +46,7 @@ export const getHistory = (): TarotHistoryItem[] => {
         };
       }
       // Remove 'date' property if it exists (for items that have both)
-      const { date, ...rest } = item;
+      const { date: _date, ...rest } = item;
       return rest as TarotHistoryItem;
     });
   } catch (error) {

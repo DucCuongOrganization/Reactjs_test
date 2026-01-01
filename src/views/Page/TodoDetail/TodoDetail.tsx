@@ -10,8 +10,8 @@ import {
 } from "antd";
 import { useEffect, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { ReactComponent as AttachmentIcon } from "../../../assets/svg/attachment.svg";
-import { ReactComponent as CalendarIcon } from "../../../assets/svg/calendar.svg";
+import AttachmentIcon from "../../../assets/svg/attachment.svg?react";
+import CalendarIcon from "../../../assets/svg/calendar.svg?react";
 import { useConfirmModals } from "../../../hooks/useConfirmModals";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
@@ -138,7 +138,7 @@ export default function TodoDetail() {
             message.success("Task updated successfully!");
             dispatch(setEditMode(false));
           }
-        } catch (error) {
+        } catch {
           message.error(`Failed to ${isCreateMode ? "create" : "update"} task`);
         } finally {
           dispatch(setSubmitting(false));
@@ -257,7 +257,7 @@ export default function TodoDetail() {
           <>
             {/* Left: Info */}
             <Card title="To Do Information" className="todo-detail-info">
-              <Space direction="vertical" size="large" className="info-content">
+              <Space orientation="vertical" size="large" className="info-content">
                 <div className="info-section">
                   <Title level={5}>Status</Title>
                   <StatusTag status={todo!.status}>

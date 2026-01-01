@@ -115,7 +115,7 @@ export const TodoForm = React.forwardRef<TodoFormRef, TodoFormProps>(
         }
       >
         {/* 🎓 RENDER PROPS: Receive form methods */}
-        {({ register, control, formState: { errors } }) => {
+        {({ register: _register, control, formState: { errors } }) => {
           return (
             <>
               {/* 🎓 RADIO BUTTONS: Using Controller + AntD Radio */}
@@ -286,3 +286,5 @@ export const TodoForm = React.forwardRef<TodoFormRef, TodoFormProps>(
     );
   }
 );
+
+TodoForm.displayName = "TodoForm";
