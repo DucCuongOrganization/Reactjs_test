@@ -55,63 +55,31 @@ const TarotAR: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const loadScript = (src: string, integrity?: string): Promise<void> => {
-      return new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${src}"]`)) return resolve();
-        const script = document.createElement("script");
-        script.src = src;
-        script.crossOrigin = "anonymous";
-        if (integrity) {
-          script.integrity = integrity;
-        }
-        script.onload = () => resolve();
-        script.onerror = reject;
-        document.head.appendChild(script);
+    if (containerRef.current && !sceneManager.current) {
+      sceneManager.current = new TarotSceneManager(containerRef.current, {
+        onLoadingComplete: () => dispatch(setLoading(false)),
+        onCardPicked: (count) => {
+          dispatch(setPickedCount(count));
+          soundManager.playSelectSound(); // SFX: Card Pick
+        },
+        onSelectionComplete: (cards) => {
+          dispatch(completeSelection(cards));
+          soundManager.playRevealSound(); // SFX: Reveal
+        },
       });
-    };
-
-    const setupScene = async () => {
-      try {
-        await Promise.all([
-          loadScript(
-            "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
-            "sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ=="
-          ),
-          loadScript(
-            "https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js",
-            "sha512-lIKG1kC5TMb1Zx32vdz1n31YJMZRknVY20U9MJ28hD3y2c0OKN0Ce5NhJji78v8zX5UOSsm+MTBOcJt7yMBnSg=="
-          ),
-        ]);
-
-        if (containerRef.current) {
-          sceneManager.current = new TarotSceneManager(containerRef.current, {
-            onLoadingComplete: () => dispatch(setLoading(false)),
-            onCardPicked: (count) => {
-              dispatch(setPickedCount(count));
-              soundManager.playSelectSound(); // SFX: Card Pick
-            },
-            onSelectionComplete: (cards) => {
-              dispatch(completeSelection(cards));
-              soundManager.playRevealSound(); // SFX: Reveal
-            },
-          });
-        }
-      } catch (error) {
-        console.error("Failed to initialize Tarot Scene:", error);
-        dispatch(setLoading(false)); // Clear loading state on error
-      }
-    };
-
-    setupScene();
+    }
 
     return () => {
       sceneManager.current?.cleanup();
+      sceneManager.current = null;
     };
   }, [dispatch]);
 
   const handleTopicSelect = (topic: TarotTopic) => {
     dispatch(setSelectedTopic(topic));
     dispatch(setStep(TarotStep.PICKING));
+    if (!sceneManager.current)
+      console.error("❌ Scene Manager not found during topic select!");
     sceneManager.current?.startGame();
 
     // Start Audio
@@ -133,7 +101,6 @@ const TarotAR: React.FC = () => {
 
   return (
     <div className="tarot-container">
-      {/* 3D Canvas Layer */}
       <div ref={containerRef} id="canvas-container" />
 
       {/* UI Overlay Layer */}

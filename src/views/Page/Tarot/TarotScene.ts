@@ -1,11 +1,12 @@
 import backCardImage from "../../../assets/png/back.png";
 import { cloneDeep } from "lodash";
-import * as THREE_TYPES from "three";
+import * as THREE from "three";
+import { Tween, Easing, Group as TweenGroup } from "@tweenjs/tween.js";
 import { CardData } from "../../types/tarot";
 import { TAROT_CONFIG as CONFIG, SCENE_CONFIG, TAROT_DATA } from "./constants";
 
 interface Explosion {
-  mesh: THREE_TYPES.Points;
+  mesh: THREE.Points;
   velocities: number[];
   age: number;
 }
@@ -20,28 +21,26 @@ export class TarotSceneManager {
   private container: HTMLDivElement;
   private callbacks: TarotSceneCallbacks;
 
-  private THREE: any;
-  private TWEEN: any;
-
-  private scene!: THREE_TYPES.Scene;
-  private camera!: THREE_TYPES.PerspectiveCamera;
-  private renderer!: THREE_TYPES.WebGLRenderer;
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private tweenGroup: TweenGroup = new TweenGroup();
   private animationId!: number;
   private isDisposed = false;
 
-  private cardGroup!: THREE_TYPES.Group;
-  private textureLoader!: THREE_TYPES.TextureLoader;
-  private raycaster!: THREE_TYPES.Raycaster;
-  private mouse!: THREE_TYPES.Vector2;
-  private starFieldMesh!: THREE_TYPES.InstancedMesh;
+  private cardGroup!: THREE.Group;
+  private textureLoader!: THREE.TextureLoader;
+  private raycaster!: THREE.Raycaster;
+  private mouse!: THREE.Vector2;
+  private starFieldMesh!: THREE.InstancedMesh;
   private explosions: Explosion[] = [];
-  private storedCards: THREE_TYPES.Mesh[] = [];
-  private inspectingCard: THREE_TYPES.Mesh | null = null;
-  private hoveredCard: THREE_TYPES.Mesh | null = null;
+  private storedCards: THREE.Mesh[] = [];
+  private inspectingCard: THREE.Mesh | null = null;
+  private hoveredCard: THREE.Mesh | null = null;
   private isGameActive = false;
 
-  private particleTexture!: THREE_TYPES.Texture;
-  private explosionMaterial!: THREE_TYPES.PointsMaterial;
+  private particleTexture!: THREE.Texture;
+  private explosionMaterial!: THREE.PointsMaterial;
 
   // Bound event handlers for proper cleanup
   private onMouseDownBound: (event: MouseEvent) => void;
@@ -52,17 +51,6 @@ export class TarotSceneManager {
   constructor(container: HTMLDivElement, callbacks: TarotSceneCallbacks) {
     this.container = container;
     this.callbacks = callbacks;
-
-    const win = window as any;
-    if (!win.THREE || !win.TWEEN) {
-      throw new Error(
-        "TarotSceneManager dependencies (THREE or TWEEN) are missing from the window object. " +
-          "Ensure Three.js and Tween.js scripts are loaded before initializing the scene."
-      );
-    }
-
-    this.THREE = win.THREE;
-    this.TWEEN = win.TWEEN;
 
     // Bind event handlers once
     this.onMouseDownBound = this.onMouseDown.bind(this);
@@ -75,15 +63,15 @@ export class TarotSceneManager {
   }
 
   private init() {
-    this.scene = new this.THREE.Scene();
+    this.scene = new THREE.Scene();
     if (SCENE_CONFIG.fog) {
-      this.scene.fog = new this.THREE.FogExp2(
+      this.scene.fog = new THREE.FogExp2(
         SCENE_CONFIG.fog.color,
         SCENE_CONFIG.fog.density
       );
     }
 
-    this.camera = new this.THREE.PerspectiveCamera(
+    this.camera = new THREE.PerspectiveCamera(
       SCENE_CONFIG.camera.fov,
       this.container.clientWidth / this.container.clientHeight,
       SCENE_CONFIG.camera.near,
@@ -91,7 +79,7 @@ export class TarotSceneManager {
     );
     this.camera.position.set(0, 0, SCENE_CONFIG.camera.position.z);
 
-    this.renderer = new this.THREE.WebGLRenderer({
+    this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       powerPreference: "high-performance",
@@ -101,18 +89,20 @@ export class TarotSceneManager {
       this.container.clientHeight
     );
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.toneMapping = this.THREE.ACESFilmicToneMapping;
+    this.renderer.toneMapping = THREE.NoToneMapping;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.domElement.style.touchAction = "none";
     this.container.appendChild(this.renderer.domElement);
 
-    const ambient = new this.THREE.AmbientLight(
+    const ambient = new THREE.AmbientLight(
       SCENE_CONFIG.lighting.ambient.color,
-      SCENE_CONFIG.lighting.ambient.intensity
+      SCENE_CONFIG.lighting.ambient.intensity * 6.0
     );
     this.scene.add(ambient);
 
-    const spotLight = new this.THREE.SpotLight(
+    const spotLight = new THREE.SpotLight(
       SCENE_CONFIG.lighting.spot.color,
-      SCENE_CONFIG.lighting.spot.intensity
+      SCENE_CONFIG.lighting.spot.intensity * 5.0
     );
     spotLight.position.set(
       SCENE_CONFIG.lighting.spot.position.x,
@@ -121,7 +111,7 @@ export class TarotSceneManager {
     );
     this.scene.add(spotLight);
 
-    this.textureLoader = new this.THREE.TextureLoader();
+    this.textureLoader = new THREE.TextureLoader();
     this.textureLoader.setCrossOrigin("anonymous");
     this.particleTexture = this.generateParticleTexture();
 
@@ -130,16 +120,12 @@ export class TarotSceneManager {
     this.createCards(shuffledCards);
     this.createBackgroundStars();
 
-    this.raycaster = new this.THREE.Raycaster();
-    this.mouse = new this.THREE.Vector2();
-    this.renderer.domElement.addEventListener(
-      "mousedown",
-      this.onMouseDownBound
-    );
-    this.renderer.domElement.addEventListener(
-      "mousemove",
-      this.onMouseMoveBound
-    );
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+
+    // Attach to container for better click reliability
+    this.container.addEventListener("pointerdown", this.onMouseDownBound);
+    this.container.addEventListener("pointermove", this.onMouseMoveBound);
     window.addEventListener("resize", this.onResizeBound);
 
     setTimeout(() => this.callbacks.onLoadingComplete(), 2500);
@@ -152,7 +138,7 @@ export class TarotSceneManager {
     }
   }
 
-  private generateParticleTexture(): THREE_TYPES.Texture {
+  private generateParticleTexture(): THREE.Texture {
     const canvas = document.createElement("canvas");
     canvas.width = 64;
     canvas.height = 64;
@@ -163,23 +149,23 @@ export class TarotSceneManager {
     grad.addColorStop(1, "rgba(255, 255, 255, 0)");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 64, 64);
-    const tex = new this.THREE.Texture(canvas);
+    const tex = new THREE.Texture(canvas);
     tex.needsUpdate = true;
     return tex;
   }
 
   private createBackgroundStars() {
     const count = SCENE_CONFIG.stars.count;
-    const geo = new this.THREE.BoxGeometry(0.1, 0.1, 0.1);
-    const mat = new this.THREE.MeshBasicMaterial({
+    const geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    const mat = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
       opacity: 0.8,
-      blending: this.THREE.AdditiveBlending,
+      blending: THREE.AdditiveBlending,
     });
 
-    this.starFieldMesh = new this.THREE.InstancedMesh(geo, mat, count);
-    const dummy = new this.THREE.Object3D();
+    this.starFieldMesh = new THREE.InstancedMesh(geo, mat, count);
+    const dummy = new THREE.Object3D();
     for (let i = 0; i < count; i++) {
       dummy.position.set(
         (Math.random() - 0.5) * 60,
@@ -200,10 +186,10 @@ export class TarotSceneManager {
   }
 
   private createCards(cardData: CardData[]) {
-    this.cardGroup = new this.THREE.Group();
+    this.cardGroup = new THREE.Group();
     this.cardGroup.position.y = -1.5; // Move deck down to avoid UI overlap
     this.scene.add(this.cardGroup);
-    const geo = new this.THREE.BoxGeometry(
+    const geo = new THREE.BoxGeometry(
       CONFIG.cardWidth,
       CONFIG.cardHeight,
       0.02
@@ -212,24 +198,31 @@ export class TarotSceneManager {
     // Load card back texture with error handling
     const backTex = this.textureLoader.load(
       backCardImage,
-      undefined, // onLoad
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+      },
       undefined, // onProgress
       (error) => {
         console.error("Failed to load card back texture:", error);
+        // Fallback: Use a basic color or placeholder if texture fails
+        matBack.color.setHex(0x333333);
+        matBack.needsUpdate = true;
       }
     );
-    const matEdge = new this.THREE.MeshStandardMaterial({
-      color: 0xd4af37,
-      metalness: 0.8,
-      roughness: 0.2,
+    const matEdge = new THREE.MeshStandardMaterial({
+      color: 0xf5f5f0,
+      metalness: 0.1,
+      roughness: 0.5,
     });
-    const matBack = new this.THREE.MeshStandardMaterial({
+    const matBack = new THREE.MeshStandardMaterial({
       map: backTex,
       color: 0xffffff,
+      roughness: 0.7,
+      metalness: 0.0,
     });
 
     cardData.forEach((data: CardData, i: number) => {
-      const matFront = new this.THREE.MeshStandardMaterial({
+      const matFront = new THREE.MeshStandardMaterial({
         map: null,
         transparent: true,
         color: 0xffffff,
@@ -238,6 +231,7 @@ export class TarotSceneManager {
       this.textureLoader.load(
         data.url,
         (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
           matFront.map = texture;
           matFront.needsUpdate = true;
         },
@@ -249,11 +243,12 @@ export class TarotSceneManager {
           );
           // Apply red tint on error asynchronously
           matFront.color.setHex(0xff0000);
+          matFront.needsUpdate = true;
         }
       );
-      const matBackUnique = matBack.clone() as THREE_TYPES.MeshStandardMaterial;
+      const matBackUnique = matBack.clone() as THREE.MeshStandardMaterial;
       matBackUnique.transparent = true;
-      const matEdgeUnique = matEdge.clone() as THREE_TYPES.MeshStandardMaterial;
+      const matEdgeUnique = matEdge.clone() as THREE.MeshStandardMaterial;
       matEdgeUnique.transparent = true;
 
       const materials = [
@@ -264,7 +259,7 @@ export class TarotSceneManager {
         matBackUnique,
         matFront,
       ];
-      const card = new this.THREE.Mesh(geo, materials);
+      const card = new THREE.Mesh(geo, materials);
       card.renderOrder = 0; // Deck level
 
       const layout = CONFIG.spreadLayout!;
@@ -286,21 +281,21 @@ export class TarotSceneManager {
     });
   }
 
-  private createExplosion(position: THREE_TYPES.Vector3) {
+  private createExplosion(position: THREE.Vector3) {
     if (!this.explosionMaterial) {
-      this.explosionMaterial = new this.THREE.PointsMaterial({
+      this.explosionMaterial = new THREE.PointsMaterial({
         size: 0.2,
         map: this.particleTexture,
         transparent: true,
         opacity: 0.9,
         depthWrite: false,
-        blending: this.THREE.AdditiveBlending,
+        blending: THREE.AdditiveBlending,
         color: 0xffffff,
       });
     }
 
     const particleCount = 1500;
-    const geo = new this.THREE.BufferGeometry();
+    const geo = new THREE.BufferGeometry();
     const positions: number[] = [];
     const velocities: number[] = [];
     const sizes: number[] = [];
@@ -320,11 +315,11 @@ export class TarotSceneManager {
 
     geo.setAttribute(
       "position",
-      new this.THREE.Float32BufferAttribute(positions, 3)
+      new THREE.Float32BufferAttribute(positions, 3)
     );
-    geo.setAttribute("size", new this.THREE.Float32BufferAttribute(sizes, 1));
+    geo.setAttribute("size", new THREE.Float32BufferAttribute(sizes, 1));
 
-    const points = new this.THREE.Points(geo, this.explosionMaterial);
+    const points = new THREE.Points(geo, this.explosionMaterial);
     this.scene.add(points);
     this.explosions.push({ mesh: points, velocities: velocities, age: 0 });
   }
@@ -341,7 +336,7 @@ export class TarotSceneManager {
         positions[j * 3 + 2] += ex.velocities[j * 3 + 2];
       }
       ex.mesh.geometry.attributes.position.needsUpdate = true;
-      const mat = ex.mesh.material as THREE_TYPES.PointsMaterial;
+      const mat = ex.mesh.material as THREE.PointsMaterial;
       mat.opacity = 1 - ex.age / 60;
       ex.mesh.scale.setScalar(1 + ex.age * 0.01);
 
@@ -364,7 +359,7 @@ export class TarotSceneManager {
     }
   }
 
-  private pickCard(card: THREE_TYPES.Mesh) {
+  private pickCard(card: THREE.Mesh) {
     if (
       this.inspectingCard ||
       this.storedCards.length >= 3 ||
@@ -375,22 +370,27 @@ export class TarotSceneManager {
     this.inspectingCard = card;
     this.scene.attach(card);
 
-    card.renderOrder = 10; // Bring to front while inspecting
+    // Ensure card is always on top
+    card.renderOrder = 999;
+    (card.material as THREE.MeshStandardMaterial[]).forEach((m) => {
+      m.depthTest = false;
+      m.transparent = true;
+    });
 
-    new this.TWEEN.Tween(card.position)
+    new Tween(card.position, this.tweenGroup)
       .to(CONFIG.inspectPos, 1200)
-      .easing(this.TWEEN.Easing.Cubic.InOut)
+      .easing(Easing.Cubic.InOut)
       .start();
 
-    new this.TWEEN.Tween(card.rotation)
+    new Tween(card.rotation, this.tweenGroup)
       .to({ x: 0, y: Math.PI, z: 0 }, 1200)
-      .easing(this.TWEEN.Easing.Exponential.InOut)
+      .easing(Easing.Exponential.InOut)
       .start();
 
     const targetScale = CONFIG.inspectScale;
-    new this.TWEEN.Tween(card.scale)
+    new Tween(card.scale, this.tweenGroup)
       .to({ x: targetScale, y: targetScale, z: targetScale }, 1200)
-      .easing(this.TWEEN.Easing.Back.Out)
+      .easing(Easing.Back.Out)
       .onComplete(() => {
         setTimeout(() => {
           this.createExplosion(card.position);
@@ -420,7 +420,10 @@ export class TarotSceneManager {
     const card = this.inspectingCard;
     this.storedCards.push(card);
     this.inspectingCard = null;
-    card.renderOrder = 20; // Stored cards on top
+    card.renderOrder = 100; // Stored cards stay on top of grid but below inspection
+    (card.material as THREE.MeshStandardMaterial[]).forEach((m) => {
+      m.depthTest = true; // Restore depth test for stored cards
+    });
 
     this.repositionStoredCards();
     this.updatePhase();
@@ -431,13 +434,13 @@ export class TarotSceneManager {
     this.storedCards.forEach((c, i) => {
       const pos = this.getSafeVerticalLeftPosition(i);
 
-      new this.TWEEN.Tween(c.position)
+      new Tween(c.position, this.tweenGroup)
         .to({ x: pos.x, y: pos.y, z: pos.z }, 800)
-        .easing(this.TWEEN.Easing.Exponential.Out)
+        .easing(Easing.Exponential.Out)
         .start();
-      new this.TWEEN.Tween(c.scale)
+      new Tween(c.scale, this.tweenGroup)
         .to({ x: scale, y: scale, z: scale }, 800)
-        .easing(this.TWEEN.Easing.Exponential.Out)
+        .easing(Easing.Exponential.Out)
         .start();
     });
   }
@@ -450,7 +453,7 @@ export class TarotSceneManager {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObjects(this.cardGroup.children);
     if (intersects.length > 0) {
-      const object = intersects[0].object as THREE_TYPES.Mesh;
+      const object = intersects[0].object as THREE.Mesh;
       this.pickCard(object);
     }
   }
@@ -463,34 +466,34 @@ export class TarotSceneManager {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObjects(this.cardGroup.children);
 
-    let foundHover: THREE_TYPES.Mesh | null = null;
+    let foundHover: THREE.Mesh | null = null;
     if (intersects.length > 0) {
-      const obj = intersects[0].object as THREE_TYPES.Mesh;
+      const obj = intersects[0].object as THREE.Mesh;
       if (!obj.userData.isPicked) foundHover = obj;
     }
 
     if (foundHover !== this.hoveredCard) {
       if (this.hoveredCard) {
-        new this.TWEEN.Tween(this.hoveredCard.position)
+        new Tween(this.hoveredCard.position, this.tweenGroup)
           .to({ z: CONFIG.spreadLayout!.startZ }, 300)
-          .easing(this.TWEEN.Easing.Quadratic.Out)
+          .easing(Easing.Quadratic.Out)
           .start();
-        (
-          this.hoveredCard.material as THREE_TYPES.MeshStandardMaterial[]
-        ).forEach((m) => {
-          if (m.emissive) m.emissive.setHex(0x000000);
-        });
+        (this.hoveredCard.material as THREE.MeshStandardMaterial[]).forEach(
+          (m) => {
+            if (m.emissive) m.emissive.setHex(0x000000);
+          }
+        );
       }
       if (foundHover) {
-        new this.TWEEN.Tween(foundHover.position)
+        new Tween(foundHover.position, this.tweenGroup)
           .to({ z: CONFIG.spreadLayout!.startZ + 0.6 }, 300)
-          .easing(this.TWEEN.Easing.Quadratic.Out)
+          .easing(Easing.Quadratic.Out)
           .start();
         const matFront = (
-          foundHover.material as THREE_TYPES.MeshStandardMaterial[]
+          foundHover.material as THREE.MeshStandardMaterial[]
         )[5];
         if (matFront && matFront.emissive) {
-          new this.TWEEN.Tween({ brightness: 0 })
+          new Tween({ brightness: 0 }, this.tweenGroup)
             .to({ brightness: 0.5 }, 150)
             .yoyo(true)
             .repeat(1)
@@ -543,10 +546,10 @@ export class TarotSceneManager {
     this.explosions = [];
 
     // Stop all running Tweens to prevent conflicts
-    this.TWEEN.removeAll();
+    this.tweenGroup.removeAll();
 
     // Shuffle the card meshes directly to maintain texture usage without reloading
-    const cards = [...this.cardGroup.children] as THREE_TYPES.Mesh[];
+    const cards = [...this.cardGroup.children] as THREE.Mesh[];
     this.shuffleArray(cards);
 
     // Clear and re-add cards in new order
@@ -574,19 +577,21 @@ export class TarotSceneManager {
       card.userData.id = i;
 
       // Reset Visuals
-      new this.TWEEN.Tween(card.position)
+      new Tween(card.position, this.tweenGroup)
         .to({ x, y: y + arcOffset, z: layout.startZ }, 500)
-        .easing(this.TWEEN.Easing.Back.Out)
+        .easing(Easing.Back.Out)
         .start();
 
-      new this.TWEEN.Tween(card.rotation)
+      new Tween(card.rotation, this.tweenGroup)
         .to({ x: 0, y: 0, z: 0 }, 500)
-        .easing(this.TWEEN.Easing.Quadratic.Out)
+        .easing(Easing.Quadratic.Out)
         .start();
 
-      new this.TWEEN.Tween(card.scale).to({ x: 1, y: 1, z: 1 }, 500).start();
+      new Tween(card.scale, this.tweenGroup)
+        .to({ x: 1, y: 1, z: 1 }, 500)
+        .start();
 
-      const materials = card.material as THREE_TYPES.MeshStandardMaterial[];
+      const materials = card.material as THREE.MeshStandardMaterial[];
       materials.forEach((m) => {
         if (m.transparent) m.opacity = 1;
         if (m.emissive) m.emissive.setHex(0x000000);
@@ -599,16 +604,8 @@ export class TarotSceneManager {
     this.isDisposed = true;
     cancelAnimationFrame(this.animationId);
     window.removeEventListener("resize", this.onResizeBound);
-    if (this.renderer && this.renderer.domElement) {
-      this.renderer.domElement.removeEventListener(
-        "mousedown",
-        this.onMouseDownBound
-      );
-      this.renderer.domElement.removeEventListener(
-        "mousemove",
-        this.onMouseMoveBound
-      );
-    }
+    this.container.removeEventListener("pointerdown", this.onMouseDownBound);
+    this.container.removeEventListener("pointermove", this.onMouseMoveBound);
     this.scene.traverse((object: any) => {
       if (object.isMesh || object.isPoints) {
         if (object.geometry) object.geometry.dispose();
@@ -623,19 +620,25 @@ export class TarotSceneManager {
       }
     });
     if (this.particleTexture) this.particleTexture.dispose();
-    if (this.renderer) this.renderer.dispose();
+    if (this.renderer) {
+      this.renderer.forceContextLoss(); // Force WebGL context release
+      this.renderer.dispose();
+      this.renderer.domElement.remove(); // Ensure canvas is removed from DOM
+    }
   }
 
   private animate(time: number) {
     if (this.isDisposed) return;
     this.animationId = requestAnimationFrame(this.animateBound);
-    this.TWEEN.update(time);
+    // Update our managed tween group
+    this.tweenGroup.update(time);
+
     this.updateExplosions();
 
     if (this.isGameActive) {
       const isInspecting = !!this.inspectingCard;
-      this.cardGroup.children.forEach((obj: THREE_TYPES.Object3D) => {
-        const c = obj as THREE_TYPES.Mesh;
+      this.cardGroup.children.forEach((obj: THREE.Object3D) => {
+        const c = obj as THREE.Mesh;
         // Use the stable ID stored in userData, not the loop index which changes when cards are picked/removed
         const id = c.userData.id;
 
@@ -653,7 +656,7 @@ export class TarotSceneManager {
             baseY + arcOffset + Math.sin(time * 0.001 + id * 0.1) * 0.05;
 
           const targetOpacity = isInspecting ? 0.2 : 1.0;
-          (c.material as THREE_TYPES.MeshStandardMaterial[]).forEach((m) => {
+          (c.material as THREE.MeshStandardMaterial[]).forEach((m) => {
             if (m.transparent === undefined) m.transparent = true;
             // Smoothly transition opacity
             m.opacity += (targetOpacity - m.opacity) * 0.1;
