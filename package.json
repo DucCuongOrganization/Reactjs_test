@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@hookform/resolvers": "^3.9.1",

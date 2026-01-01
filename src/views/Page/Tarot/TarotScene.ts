@@ -202,8 +202,11 @@ export class TarotSceneManager {
         texture.colorSpace = THREE.SRGBColorSpace;
       },
       undefined, // onProgress
-      () => {
-        // Silently handle error or add fallback logic if needed
+      (error) => {
+        console.error("Failed to load card back texture:", error);
+        // Fallback: Use a basic color or placeholder if texture fails
+        matBack.color.setHex(0x333333);
+        matBack.needsUpdate = true;
       }
     );
     const matEdge = new THREE.MeshStandardMaterial({
@@ -233,9 +236,14 @@ export class TarotSceneManager {
           matFront.needsUpdate = true;
         },
         undefined, // onProgress
-        () => {
+        (error) => {
+          console.error(
+            `Failed to load texture for card "${data.name}" (${data.url}):`,
+            error
+          );
           // Apply red tint on error asynchronously
           matFront.color.setHex(0xff0000);
+          matFront.needsUpdate = true;
         }
       );
       const matBackUnique = matBack.clone() as THREE.MeshStandardMaterial;
@@ -361,9 +369,6 @@ export class TarotSceneManager {
     card.userData.isPicked = true;
     this.inspectingCard = card;
     this.scene.attach(card);
-
-    // Fire callback to update UI
-    this.callbacks.onCardPicked(this.storedCards.length + 1);
 
     // Ensure card is always on top
     card.renderOrder = 999;
